@@ -1,0 +1,7 @@
+{
+    "name": "ConfusedGameDev.Vfx.Editor",
+    "rootNamespace": "ConfusedGameDev.Vfx.Editor",
+    "references": ["ConfusedGameDev.Vfx"],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": true
+}

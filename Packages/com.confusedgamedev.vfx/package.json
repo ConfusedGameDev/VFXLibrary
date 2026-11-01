@@ -1,0 +1,14 @@
+{
+  "name": "com.confusedgamedev.vfx",
+  "version": "0.1.0",
+  "displayName": "ConfusedGameDev VFX",
+  "description": "URP ports of the 00GameDevs Three.js effects, with website-matched presets and live editor preview.",
+  "unity": "6000.5",
+  "author": {
+    "name": "ConfusedGameDev",
+    "url": "https://github.com/ConfusedGameDev/VFXLibrary"
+  },
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "17.5.0"
+  }
+}
