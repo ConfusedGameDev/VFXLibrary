@@ -1,6 +1,6 @@
 {
     "name": "ConfusedGameDev.Vfx",
     "rootNamespace": "ConfusedGameDev.Vfx",
-    "references": [],
+    "references": ["Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"],
     "autoReferenced": true
 }
