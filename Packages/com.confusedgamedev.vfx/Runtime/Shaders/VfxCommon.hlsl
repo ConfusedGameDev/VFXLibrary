@@ -26,6 +26,9 @@ CBUFFER_START(UnityPerMaterial)
     float _Spread;
     float _Stretch;
     float _PanelCount;
+    float4 _Motion0;
+    float4 _Motion1;
+    float4 _Motion2;
 CBUFFER_END
 
 float Hash(float2 p)
