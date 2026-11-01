@@ -1,12 +1,12 @@
 # Third-Party Notices
 
-Effects in this package are ported from the 00GameDevs exported assets (https://00gamedevs.com), which are
+Effects and objects in this package are ported from the 00GameDevs exported assets (https://00gamedevs.com), which are
 built on Three.js. Both are distributed under the MIT License below. License statement recorded 2026-11-01.
 
 - Copyright (c) 2026 00GameDevs (@00vchannel)
 - Copyright (c) 2010-2026 three.js authors
 
-The 00GameDevs license covers exported effect code only, not the website's UI, branding, avatars or
+The 00GameDevs license covers exported VFX, shader and object code only, not the website's UI, branding, avatars or
 promotional images.
 
 ## The MIT License
