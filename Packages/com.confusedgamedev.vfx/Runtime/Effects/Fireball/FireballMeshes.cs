@@ -59,83 +59,22 @@ namespace ConfusedGameDev.Vfx
         /// <summary>One quad per particle. The shader collapses quads past the density-driven count.</summary>
         public static Mesh CreateParticles()
         {
-            Vector4[] seeds = CreateSeeds(MaxParticles);
-            var extras = new List<Vector4>(MaxParticles * 4);
-            for (int i = 0; i < MaxParticles; i++)
-            {
-                for (int corner = 0; corner < 4; corner++)
-                {
-                    extras.Add(seeds[i]);
-                }
-            }
-
-            Mesh mesh = CreateQuads("FireballParticles", MaxParticles, 1f);
-            mesh.SetUVs(1, extras);
-            return mesh;
+            return VfxMeshes.CreateQuads("FireballParticles", MaxParticles, EffectBounds, seeds: CreateSeeds(MaxParticles));
         }
 
         public static Mesh CreateImpact()
         {
-            return CreateQuads("FireballImpact", ImpactPuffs, 1f);
+            return VfxMeshes.CreateQuads("FireballImpact", ImpactPuffs, EffectBounds);
         }
 
         public static Mesh CreateGlow()
         {
-            return CreateQuads("FireballGlow", 1, 1.8f);
+            return VfxMeshes.CreateQuads("FireballGlow", 1, EffectBounds, 1.8f);
         }
 
-        /// <summary>Same generator as the source, so particles land where they do on the site.</summary>
         public static Vector4[] CreateSeeds(int count)
         {
-            var seeds = new Vector4[count];
-            uint state = ParticleSeed;
-            for (int i = 0; i < count; i++)
-            {
-                for (int component = 0; component < 4; component++)
-                {
-                    state = unchecked(state * 1664525u + 1013904223u);
-                    seeds[i][component] = (float)(state / 4294967296.0);
-                }
-            }
-            return seeds;
-        }
-
-        // UV2.x carries the quad's index.
-        private static Mesh CreateQuads(string name, int count, float width)
-        {
-            var positions = new List<Vector3>(count * 4);
-            var uvs = new List<Vector2>(count * 4);
-            var ids = new List<Vector2>(count * 4);
-            var indices = new List<int>(count * 6);
-
-            for (int i = 0; i < count; i++)
-            {
-                int first = positions.Count;
-                for (int v = 0; v <= 1; v++)
-                {
-                    for (int u = 0; u <= 1; u++)
-                    {
-                        positions.Add(new Vector3((u - 0.5f) * width, (v - 0.5f) * width, 0f));
-                        uvs.Add(new Vector2(u, v));
-                        ids.Add(new Vector2(i, 0f));
-                    }
-                }
-
-                indices.Add(first);
-                indices.Add(first + 2);
-                indices.Add(first + 1);
-                indices.Add(first + 2);
-                indices.Add(first + 3);
-                indices.Add(first + 1);
-            }
-
-            var mesh = new Mesh { name = name };
-            mesh.SetVertices(positions);
-            mesh.SetUVs(0, uvs);
-            mesh.SetUVs(2, ids);
-            mesh.SetTriangles(indices, 0);
-            mesh.bounds = EffectBounds;
-            return mesh;
+            return VfxMeshes.CreateSeeds(count, ParticleSeed);
         }
     }
 }
