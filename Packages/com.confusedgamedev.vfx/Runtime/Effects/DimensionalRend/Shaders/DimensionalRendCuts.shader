@@ -10,7 +10,7 @@ Shader "ConfusedGameDev/Vfx/DimensionalRend Cuts"
             Tags { "LightMode" = "UniversalForward" }
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
-            Cull Back
+            Cull Front
 
             HLSLPROGRAM
             #pragma vertex Vert

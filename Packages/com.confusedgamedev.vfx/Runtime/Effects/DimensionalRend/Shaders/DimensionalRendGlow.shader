@@ -118,7 +118,7 @@ Shader "ConfusedGameDev/Vfx/DimensionalRend Glow"
 
                 clip(input.alpha - 0.003);
                 float radial = abs(input.band) / max(0.00001, input.taper) * 5.5;
-                float halo = (exp(-pow((radial - 1.02) * 1.3, 2.0)) * 0.60 + exp(-pow((radial - 1.0) * 0.53, 2.0)) * 0.16) * smoothstep(0.73, 1.10, radial);
+                float halo = (exp(-Sq((radial - 1.02) * 1.3)) * 0.60 + exp(-Sq((radial - 1.0) * 0.53)) * 0.16) * smoothstep(0.73, 1.10, radial);
                 float distanceToBlade = abs(input.band) - (0.65 / 5.5) * max(input.taper, 0.0);
                 float aa = clamp(fwidth(distanceToBlade), 0.0001, 0.5 / 5.5);
                 float blade = (1.0 - smoothstep(-aa, aa, distanceToBlade)) * step(0.001, input.taper);
