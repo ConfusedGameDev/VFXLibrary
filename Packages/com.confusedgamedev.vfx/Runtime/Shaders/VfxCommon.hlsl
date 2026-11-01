@@ -25,6 +25,7 @@ CBUFFER_START(UnityPerMaterial)
     float4 _LayerCounts;
     float _Spread;
     float _Stretch;
+    float _PanelCount;
 CBUFFER_END
 
 float Hash(float2 p)
