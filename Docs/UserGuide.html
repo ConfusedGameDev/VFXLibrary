@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ConfusedGameDev VFX</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbfaf8;--fg:#22242a;--mut:#676b75;--card:#fff;--line:#e3e1dc;--acc:#4a46c8;--code:#f1efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14151a;--fg:#e7e7ea;--mut:#9a9da8;--card:#1c1e25;--line:#2e3039;--acc:#a6a3ff;--code:#22242c}}
+:root[data-theme=dark]{--bg:#14151a;--fg:#e7e7ea;--mut:#9a9da8;--card:#1c1e25;--line:#2e3039;--acc:#a6a3ff;--code:#22242c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,"Noto Sans JP",sans-serif}
+html[data-lang=en] [lang=ja],html[data-lang=ja] [lang=en]{display:none}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:18px;margin:0;flex:1 1 auto}header small{color:var(--mut);display:block;font-weight:400}
+button{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:32px;max-width:1120px;margin:0 auto;padding:16px}
+nav{position:sticky;top:76px;align-self:start;font-size:14px}nav a{display:block;padding:4px 0;color:var(--mut);text-decoration:none}nav a:hover{color:var(--acc)}
+main{min-width:0;max-width:780px}h2{margin-top:2.2em;border-bottom:1px solid var(--line);padding-bottom:6px;scroll-margin-top:80px}h3{margin-top:1.8em}
+code{font:.9em "JetBrains Mono",monospace;background:var(--code);padding:1px 4px;border-radius:4px;overflow-wrap:anywhere}
+pre{position:relative;background:var(--code);padding:12px;border-radius:8px;overflow-x:auto}pre code{background:none;padding:0;overflow-wrap:normal}
+pre button{position:absolute;top:6px;right:6px;font-size:12px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:10px 0}summary{cursor:pointer;font-weight:600}
+.note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;margin:14px 0;border-radius:0 8px 8px 0}
+.mermaid{background:var(--card);border-radius:8px;padding:8px;overflow-x:auto}
+@media (max-width:800px){.wrap{grid-template-columns:minmax(0,1fr)}nav{position:static;border:1px solid var(--line);border-radius:8px;padding:8px 12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>ConfusedGameDev VFX<small>v0.1.0 &middot; <span lang="en">All 60 effects ported</span><span lang="ja">全60エフェクト移植完了</span> &middot; 2026-11-02 &middot; Jorge &middot; VFXLibrary</small></h1>
+<button id="lang">日本語</button><button id="theme" aria-label="Theme">◐</button>
+</header>
+<div class="wrap">
+<nav>
+<a href="#intro"><span lang="en">Introduction</span><span lang="ja">概要</span></a><a href="#flow"><span lang="en">Flow diagram</span><span lang="ja">フロー図</span></a><a href="#use"><span lang="en">Instructions</span><span lang="ja">使い方</span></a><a href="#tutorial"><span lang="en">Tutorial</span><span lang="ja">チュートリアル</span></a><a href="#tech"><span lang="en">Technical overview</span><span lang="ja">技術概要</span></a><a href="#effects"><span lang="en">Effect catalog</span><span lang="ja">エフェクト一覧</span></a><a href="#status"><span lang="en">Status and gaps</span><span lang="ja">現状と未対応</span></a><a href="#log"><span lang="en">Changelog</span><span lang="ja">変更履歴</span></a>
+</nav>
+<main>
+<h2 id="intro"><span lang="en">Introduction</span><span lang="ja">概要</span></h2>
+<p lang="en"><code>com.confusedgamedev.vfx</code> is a UPM package of 60 real-time visual effects for the Universal Render Pipeline, ported from the Three.js library at <a href="https://00gamedevs.com">00gamedevs.com</a> (MIT, see <code>THIRD-PARTY-NOTICES.md</code>). Each effect is a prefab with a preset asset and procedural shaders; no texture or particle system is needed. It is for Unity developers who want the site&#39;s effects in a game.</p><p lang="ja"><code>com.confusedgamedev.vfx</code> は、<a href="https://00gamedevs.com">00gamedevs.com</a> の Three.js ライブラリ（MIT、<code>THIRD-PARTY-NOTICES.md</code> 参照）から移植した、Universal Render Pipeline 向けリアルタイム VFX 60種の UPM パッケージです。各エフェクトはプレハブ、プリセットアセット、プロシージャルシェーダーで構成されます。サイトのエフェクトをゲームで使いたい Unity 開発者を対象としています。</p>
+<p lang="en">Status: version 0.1.0, on Unity 6000.5.3f1 and URP 17.5.0, with 197 EditMode tests passing.</p><p lang="ja">現状：バージョン 0.1.0、Unity 6000.5.3f1 と URP 17.5.0 に対応し、EditMode テスト 197 件がすべて成功しています。</p>
+
+<h2 id="flow"><span lang="en">Flow diagram</span><span lang="ja">フロー図</span></h2>
+<p lang="en">Every prefab effect follows this lifecycle. Burst effects usually skip the start and ending stages and finish at their duration.</p><p lang="ja">プレハブ型エフェクトはすべて次のライフサイクルに従います。バースト系は通常、開始・終了ステージを省略し、duration で完了します。</p>
+<div lang="en"><pre class="mermaid">flowchart LR
+  A[Instantiate prefab] --> B[Play]
+  B --> C[Start stage]
+  C --> D[Steady]
+  D -->|Stop or duration ends| E[Ending]
+  E --> F[Finished: onFinished]
+  F --> G[endAction: None, Disable, Destroy, ReturnToPool]
+  D -->|Projectile Hit| E</pre></div><div lang="ja"><pre class="mermaid">flowchart LR
+  A[プレハブを生成] --> B[Play]
+  B --> C[開始ステージ]
+  C --> D[定常]
+  D -->|Stop または duration 終了| E[終了ステージ]
+  E --> F[完了: onFinished]
+  F --> G[endAction: None, Disable, Destroy, ReturnToPool]
+  D -->|投射物の Hit| E</pre></div>
+
+<h2 id="use"><span lang="en">Instructions</span><span lang="ja">使い方</span></h2>
+<h3><span lang="en">Install</span><span lang="ja">インストール</span></h3>
+<ol lang="en"><li>Use Unity 6000.5 with URP 17.5.0.</li><li>Copy <code>Packages/com.confusedgamedev.vfx</code> into your project&#39;s <code>Packages</code> folder, or add it by Git URL with the path query.</li><li>Find prefabs under <code>Runtime/Effects/&lt;Name&gt;/Assets/</code>.</li></ol>
+<ol lang="ja"><li>Unity 6000.5 と URP 17.5.0 を用意します。</li><li><code>Packages/com.confusedgamedev.vfx</code> をプロジェクトの <code>Packages</code> にコピーするか、path クエリ付きの Git URL で追加します。</li><li>プレハブは <code>Runtime/Effects/&lt;Name&gt;/Assets/</code> にあります。</li></ol>
+<div class="note"><span lang="en">Effects marked * in the catalog sample the scene: turn on <b>Opaque Texture</b> in every URP asset you ship. <code>PC_RPAsset</code> has it on; <code>Mobile_RPAsset</code> has it off, so they look wrong there until enabled.</span><span lang="ja">一覧で * の付いたエフェクトはシーンをサンプリングします。出荷するすべての URP アセットで <b>Opaque Texture</b> を有効にしてください。<code>PC_RPAsset</code> は有効、<code>Mobile_RPAsset</code> は無効のため、有効にするまで正しく表示されません。</span></div>
+<h3><span lang="en">Impact Frame setup</span><span lang="ja">Impact Frame の設定</span></h3>
+<ol lang="en"><li>Select each Universal Renderer Data asset in use.</li><li>Add Renderer Feature &gt; Impact Frame.</li><li>Check its Shader field holds <code>ConfusedGameDev/Vfx/ImpactFrame</code>.</li><li>Add an <code>ImpactFrameTrigger</code> to any object.</li></ol>
+<ol lang="ja"><li>使用中の Universal Renderer Data アセットをそれぞれ選択します。</li><li>Add Renderer Feature &gt; Impact Frame を実行します。</li><li>Shader 欄が <code>ConfusedGameDev/Vfx/ImpactFrame</code> であることを確認します。</li><li>任意のオブジェクトに <code>ImpactFrameTrigger</code> を追加します。</li></ol>
+<h3><span lang="en">Troubleshooting</span><span lang="ja">トラブルシューティング</span></h3>
+<div class="tw"><table><thead><tr><th><span lang="en">Symptom</span><span lang="ja">症状</span></th><th><span lang="en">Fix</span><span lang="ja">対処</span></th></tr></thead><tbody>
+<tr><td><span lang="en">Distortion effect is black or wrong</span><span lang="ja">歪み系エフェクトが黒い・おかしい</span></td><td><span lang="en">Enable Opaque Texture on the active URP asset.</span><span lang="ja">使用中の URP アセットで Opaque Texture を有効にします。</span></td></tr>
+<tr><td><span lang="en">Weapon trail draws nothing</span><span lang="ja">武器の軌跡が描画されない</span></td><td><span lang="en">Call <code>AttachWeapon</code> or assign the weapon in the Inspector.</span><span lang="ja"><code>AttachWeapon</code> を呼ぶか、Inspector で武器を指定します。</span></td></tr>
+<tr><td><span lang="en">Impact Frame does nothing</span><span lang="ja">Impact Frame が反応しない</span></td><td><span lang="en">Add the Renderer Feature to the renderer used at this quality level. <code>Fire</code> returns false during a running sequence.</span><span lang="ja">この品質レベルのレンダラーに Renderer Feature を追加します。実行中の <code>Fire</code> は false を返します。</span></td></tr>
+<tr><td><span lang="en">Beam Z scale resets</span><span lang="ja">ビームの Z スケールが戻る</span></td><td><span lang="en">Use <code>Length</code> or <code>SetEndpoints</code>.</span><span lang="ja"><code>Length</code> または <code>SetEndpoints</code> を使います。</span></td></tr>
+<tr><td><span lang="en">Colours differ from the site</span><span lang="ja">サイトと色が異なる</span></td><td><span lang="en">Unity blends in linear space and the site in display space. Compare with tonemapping and bloom off.</span><span lang="ja">Unity はリニア空間、サイトは表示空間でブレンドします。トーンマップとブルームを切って比較してください。</span></td></tr>
+</tbody></table></div>
+
+<h2 id="tutorial"><span lang="en">Tutorial: cast a fireball</span><span lang="ja">チュートリアル：火球を放つ</span></h2>
+<ol lang="en"><li>Drag <code>Runtime/Effects/Fireball/Assets/Fireball.prefab</code> into a scene. Expected: the Inspector shows the preset with Play, Stop and Replay, previewing outside Play mode.</li><li>Change <code>color</code> in the embedded preset. Expected: the preview updates at once.</li><li>Add the script below and assign the prefab to <code>fireballPrefab</code>.</li><li>Call <code>Cast</code>, then <code>Hit()</code> on collision. Expected: the bolt flies, bursts and removes itself.</li></ol>
+<ol lang="ja"><li><code>Runtime/Effects/Fireball/Assets/Fireball.prefab</code> をシーンにドラッグします。Inspector にプリセットと Play、Stop、Replay が表示され、Play モード外でもプレビューできます。</li><li>埋め込まれたプリセットの <code>color</code> を変更します。プレビューがすぐに更新されます。</li><li>下のスクリプトを追加し、<code>fireballPrefab</code> にプレハブを割り当てます。</li><li><code>Cast</code> を呼び、衝突時に <code>Hit()</code> を呼びます。火球が飛び、炸裂して自動的に消えます。</li></ol>
+<pre><code>using ConfusedGameDev.Vfx;
+using UnityEngine;
+
+public class Caster : MonoBehaviour
+{
+    [SerializeField] private FireballEffect fireballPrefab;
+
+    public void Cast(Vector3 from, Vector3 direction)
+    {
+        FireballEffect shot = Instantiate(fireballPrefab, from, Quaternion.identity);
+        shot.onFinished.AddListener(() =&gt; Destroy(shot.gameObject));
+        shot.Play();
+        shot.SetDirection(direction); // only takes effect while playing
+    }
+}</code></pre>
+
+<h2 id="tech"><span lang="en">Technical overview</span><span lang="ja">技術概要</span></h2>
+<details open><summary><span lang="en">Dependency map</span><span lang="ja">依存関係マップ</span></summary><pre class="mermaid">flowchart TD
+  T[Tests: EditMode] --> R
+  E[ConfusedGameDev.Vfx.Editor] --> R[ConfusedGameDev.Vfx]
+  R --> U[Unity.RenderPipelines.Universal.Runtime]
+  R --> C[Unity.RenderPipelines.Core.Runtime]</pre>
+<div class="tw"><table><thead><tr><th><span lang="en">Dependency</span><span lang="ja">依存先</span></th><th><span lang="en">Version</span><span lang="ja">バージョン</span></th></tr></thead><tbody><tr><td>Unity</td><td>6000.5</td></tr><tr><td><code>com.unity.render-pipelines.universal</code></td><td>17.5.0</td></tr></tbody></table></div></details>
+<details open><summary><span lang="en">Namespaces and layout</span><span lang="ja">名前空間と構成</span></summary>
+<ul lang="en"><li><code>ConfusedGameDev.Vfx</code>: runtime, assembly of the same name.</li><li><code>ConfusedGameDev.Vfx.Editor</code>: <code>VfxEffectEditor</code> (preset embed, Play, Stop, Replay), <code>VfxAssetBuilder</code>, and one builder per effect under <b>Tools &gt; ConfusedGameDev &gt; VFX</b>.</li><li><code>Runtime/Shaders</code>: shared HLSL, with <code>VfxCommon.hlsl</code> holding the one <code>UnityPerMaterial</code> buffer.</li><li>Each effect folder has a README, preset, effect, meshes, shaders and generated assets.</li></ul>
+<ul lang="ja"><li><code>ConfusedGameDev.Vfx</code>：ランタイム（同名アセンブリ）。</li><li><code>ConfusedGameDev.Vfx.Editor</code>：<code>VfxEffectEditor</code>（プリセット埋め込み、Play、Stop、Replay）、<code>VfxAssetBuilder</code>、および <b>Tools &gt; ConfusedGameDev &gt; VFX</b> 配下のエフェクト別ビルダー。</li><li><code>Runtime/Shaders</code>：共有 HLSL。<code>VfxCommon.hlsl</code> が唯一の <code>UnityPerMaterial</code> バッファを持ちます。</li><li>各エフェクトのフォルダーには README、プリセット、エフェクト、メッシュ、シェーダー、生成アセットがあります。</li></ul></details>
+<h3><span lang="en">API reference</span><span lang="ja">APIリファレンス</span></h3><details><summary><code>VfxEffect</code></summary><p lang="en">Abstract <code>[ExecuteAlways]</code> base of every prefab effect. Values reach shaders through a <code>MaterialPropertyBlock</code>, so instances stay independent.</p><p lang="ja">プレハブ型エフェクトすべての抽象基底クラス（<code>[ExecuteAlways]</code>）です。値は <code>MaterialPropertyBlock</code> でシェーダーへ渡すため、インスタンスは互いに独立します。</p><pre><code>public VfxState State { get; }        // Idle, Playing, Stopping, Finished
+public float EffectTime, Fade, StartProgress, EndProgress { get; }
+public bool IsPlaying { get; }
+public VfxPreset Preset { get; }
+public VfxPreset RuntimeParameters { get; }  // private clone, made on first access
+public UnityEvent onFinished;
+
+public void Play();
+public void Stop(bool immediate = false);
+public void SetPreset(VfxPreset newPreset);
+public void Tick(float deltaTime);          // Update calls this in Play mode
+public void ApplyParameters();              // call after changing RuntimeParameters
+
+protected virtual void OnPlay();
+protected virtual void OnTick(float deltaTime);
+protected virtual void OnApplyParameters(MaterialPropertyBlock block, VfxPreset parameters);</code></pre></details><details><summary><code>VfxPreset</code></summary><p lang="en">Abstract <code>ScriptableObject</code>. Every effect ships a <code>&lt;Name&gt;_Default.asset</code> holding the site defaults.</p><p lang="ja">抽象 <code>ScriptableObject</code> です。各エフェクトには、サイトの既定値を持つ <code>&lt;Name&gt;_Default.asset</code> が付属します。</p><pre><code>public Color color;
+[Range(0.25f, 2f)] public float size, speed, detail;
+[Range(0.125f, 1f)] public float density;
+public VfxPlayback playback;     // OneShot, Looping
+public float duration, startDuration, stopDuration;
+public VfxEndAction endAction;   // None, Disable, Destroy, ReturnToPool</code></pre></details><details><summary><code>VfxProjectileEffect</code></summary><p lang="en">Flight and impact. <code>Hit</code> with no arguments detonates at the current contact point.</p><p lang="ja">飛翔と着弾を担当します。引数なしの <code>Hit</code> は現在の接触点で炸裂します。</p><pre><code>public void SetDirection(Vector3 direction, float speed = 4f);
+public void Hit(Vector3? worldPoint = null, Vector3? worldNormal = null);</code></pre></details><details><summary><code>VfxBeamEffect</code></summary><p lang="en"><code>Length</code> drives the root Z scale, so a manual Z scale is overwritten every update.</p><p lang="ja"><code>Length</code> はルートの Z スケールを制御します。手動で設定した Z スケールは毎回上書きされます。</p><pre><code>public const float BaseLength = 4.8f;
+public float Length { get; set; }
+public void SetEndpoints(Vector3 start, Vector3 end);
+public Vector2Int LayerCounts(float density);</code></pre></details><details><summary><code>VfxBladeTrailEffect</code></summary><p lang="en">Weapon trails draw nothing until a weapon is attached, in code or the Inspector.</p><p lang="ja">武器の軌跡は、コードまたは Inspector で武器を指定するまで何も描画しません。</p><pre><code>public const int Capacity = 64;
+public const float Lifetime = 0.18f;
+public int SampleCount { get; }
+public void AttachWeapon(Transform target, Vector3 root, Vector3 tip);
+public void DetachWeapon();</code></pre></details><details><summary><code>VfxSpellIndicatorEffect</code></summary><p lang="en">Telegraph with a fill driven by your own game timing.</p><p lang="ja">ゲーム側のタイミングで塗りを進める予兆表示です。</p><pre><code>public float Progress { get; }
+public void SetProgress(float value);
+public static Vector4 EdgeColor(Color linear);</code></pre></details><details><summary><code>VfxPool</code></summary><p lang="en">Reuses instances. Use with <code>endAction = ReturnToPool</code>.</p><p lang="ja">インスタンスを再利用します。<code>endAction = ReturnToPool</code> と組み合わせて使います。</p><pre><code>public VfxPool(VfxEffect prefab, int prewarmCount = 0, Transform parent = null);
+public int AvailableCount { get; }
+public VfxEffect Spawn(Vector3 position, Quaternion rotation);
+public void Release(VfxEffect effect);</code></pre></details><details><summary><code>ImpactFrameTrigger / ImpactFrameFeature</code></summary><p lang="en">Full-camera post-process. Triggers are not queued.</p><p lang="ja">カメラ全体へのポストプロセスです。トリガーはキューされません。</p><pre><code>Vector3 viewport = camera.WorldToViewportPoint(hitPoint);
+trigger.Fire(viewport, attackDirection);   // false while a sequence runs
+// also: SetCenter, Cancel, subjects, subjectMask, sequence</code></pre></details>
+<h3><span lang="en">General usage</span><span lang="ja">一般的な使用法</span></h3>
+<ul lang="en"><li>Edit <code>RuntimeParameters</code> for per-instance changes, then call <code>ApplyParameters</code>; this leaves the asset untouched.</li><li>Shaders compute motion in the vertex stage from <code>_EffectTime</code>, so nothing is simulated on the CPU. Blade trails are the exception: they sample the weapon each frame.</li><li>To add an effect: derive a preset and effect, build meshes, and mark a builder with <code>[VfxBuilder(&quot;Name&quot;)]</code>.</li><li>A source <code>FrontSide</code> material needs <code>Cull Front</code> because positions go through the <code>.zyx</code> axis swap.</li><li>Black Hole is the heaviest effect, and its cost is unmeasured.</li></ul>
+<ul lang="ja"><li>インスタンスごとの変更は <code>RuntimeParameters</code> を編集して <code>ApplyParameters</code> を呼びます。アセットは変更されません。</li><li>シェーダーは <code>_EffectTime</code> から頂点段階で動きを計算するため、CPU でのシミュレーションはありません。例外は武器の軌跡で、毎フレーム武器をサンプリングします。</li><li>エフェクトの追加は、プリセットとエフェクトを派生し、メッシュを作り、ビルダーに <code>[VfxBuilder(&quot;Name&quot;)]</code> を付けます。</li><li>元の <code>FrontSide</code> マテリアルは、座標が <code>.zyx</code> で軸変換されるため <code>Cull Front</code> が必要です。</li><li>Black Hole は最も重いエフェクトで、負荷は未計測です。</li></ul>
+
+<h2 id="effects"><span lang="en">Effect catalog</span><span lang="ja">エフェクト一覧</span></h2>
+<p lang="en">Every preset also has color, size, speed, detail, density and the lifecycle fields. * needs Opaque Texture. Each folder&#39;s README lists defaults and known differences.</p><p lang="ja">どのプリセットにも color、size、speed、detail、density とライフサイクル項目があります。* は Opaque Texture が必要です。既定値と既知の差異は各フォルダーの README を参照してください。</p>
+<h4><span lang="en">Projectile</span><span lang="ja">投射物</span> (8)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>ArcaneMissile</code></td><td><span lang="en">Runic Crystal Missiles</span><span lang="ja">ルーン結晶ミサイル</span></td><td><code>quantity</code> <code>spread</code></td></tr><tr><td><code>ElectricMagicArrowStrike</code></td><td><span lang="en">Golden-Bladed Lightning Arrow</span><span lang="ja">金刃の雷矢</span></td><td>&ndash;</td></tr><tr><td><code>Fireball</code></td><td><span lang="en">Blazing Fireball</span><span lang="ja">燃え盛る火球</span></td><td>&ndash;</td></tr><tr><td><code>FrostWheel</code></td><td><span lang="en">Crystal-Toothed Ice Wheel</span><span lang="ja">結晶歯の氷輪</span></td><td>&ndash;</td></tr><tr><td><code>IceShard</code></td><td><span lang="en">Frostcrystal Dart</span><span lang="ja">霜結晶の矢</span></td><td>&ndash;</td></tr><tr><td><code>PlasmaBolt</code></td><td><span lang="en">Plasma Dart</span><span lang="ja">プラズマ矢</span></td><td>&ndash;</td></tr><tr><td><code>ShadowGlaive</code></td><td><span lang="en">Afterimage Glaive</span><span lang="ja">残像のグレイブ</span></td><td>&ndash;</td></tr><tr><td><code>SpiralGale</code></td><td><span lang="en">Spiraling Wind Spear</span><span lang="ja">螺旋の風槍</span></td><td>&ndash;</td></tr></tbody></table></div><h4><span lang="en">Beam</span><span lang="ja">ビーム</span> (7)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>ArcRay</code></td><td><span lang="en">Forked Lightning Stream</span><span lang="ja">分岐する雷の奔流</span></td><td><code>quantity</code></td></tr><tr><td><code>ChargedBeam</code></td><td><span lang="en">Charged Light Cannon</span><span lang="ja">チャージ式光線砲</span></td><td>&ndash;</td></tr><tr><td><code>ContinuousBeam</code></td><td><span lang="en">Threadwoven Beam</span><span lang="ja">糸織りのビーム</span></td><td>&ndash;</td></tr><tr><td><code>PulseBeam</code></td><td><span lang="en">Ringpulse Ray</span><span lang="ja">環状パルス光線</span></td><td><code>quantity</code></td></tr><tr><td><code>RadiantBeam</code></td><td><span lang="en">Solar Halo Beam</span><span lang="ja">太陽光輪のビーム</span></td><td>&ndash;</td></tr><tr><td><code>SoulSiphon</code></td><td><span lang="en">Dark Energy Siphon</span><span lang="ja">闇エネルギーの吸収</span></td><td><code>quantity</code></td></tr><tr><td><code>VenomStream</code></td><td><span lang="en">Corrosive Venom Jet</span><span lang="ja">腐食する毒の噴流</span></td><td><code>quantity</code></td></tr></tbody></table></div><h4><span lang="en">Vortex</span><span lang="ja">渦</span> (4)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>DustDevil</code></td><td><span lang="en">Sand-Swept Vortex</span><span lang="ja">砂を巻く渦</span></td><td>&ndash;</td></tr><tr><td><code>EnergyVortex</code></td><td><span lang="en">Runic Ring Vortex</span><span lang="ja">ルーン環の渦</span></td><td>&ndash;</td></tr><tr><td><code>FireVortex</code></td><td><span lang="en">Flame-Swept Vortex</span><span lang="ja">炎を巻く渦</span></td><td>&ndash;</td></tr><tr><td><code>WindVortex</code></td><td><span lang="en">Leaf-Swept Vortex</span><span lang="ja">木の葉を巻く渦</span></td><td>&ndash;</td></tr></tbody></table></div><h4><span lang="en">Weapon trail</span><span lang="ja">武器の軌跡</span> (2)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>SpatialSmear</code> *</td><td><span lang="en">Riftblade Trail</span><span lang="ja">裂空の剣跡</span></td><td>&ndash;</td></tr><tr><td><code>WeaponSmear</code></td><td><span lang="en">Gleaming Blade Trail</span><span lang="ja">輝く剣の軌跡</span></td><td>&ndash;</td></tr></tbody></table></div><h4><span lang="en">Spell indicator</span><span lang="ja">スペル範囲表示</span> (2)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>SpellIndicatorCircle</code></td><td><span lang="en">Red Circle Spell Indicator</span><span lang="ja">赤い円形スペル範囲表示</span></td><td>&ndash;</td></tr><tr><td><code>SpellIndicatorSector</code></td><td><span lang="en">Red Sector Spell Indicator</span><span lang="ja">赤い扇形スペル範囲表示</span></td><td><code>angleDegrees</code></td></tr></tbody></table></div><h4><span lang="en">Area / looping</span><span lang="ja">範囲・ループ</span> (15)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>ArcaneMatrix</code></td><td><span lang="en">Floating Rune Matrix</span><span lang="ja">浮遊するルーン陣</span></td><td><code>quantity</code></td></tr><tr><td><code>AstralGate</code></td><td><span lang="en">Gate of Astral Tracery</span><span lang="ja">星紋の門</span></td><td>&ndash;</td></tr><tr><td><code>BindingCurse</code></td><td><span lang="en">Hooked Binding Sigil</span><span lang="ja">鉤爪の束縛陣</span></td><td><code>quantity</code></td></tr><tr><td><code>BlackHole</code> *</td><td><span lang="en">Luminous Vortex Black Hole</span><span lang="ja">光渦のブラックホール</span></td><td><code>holeSize</code> <code>holeDetail</code></td></tr><tr><td><code>BurningGround</code></td><td><span lang="en">Flame-Etched Ground</span><span lang="ja">炎刻の大地</span></td><td>&ndash;</td></tr><tr><td><code>FrostField</code></td><td><span lang="en">Sixfold Frost Sigil</span><span lang="ja">六重の霜の陣</span></td><td>&ndash;</td></tr><tr><td><code>GroundFog</code></td><td><span lang="en">Ground-Hugging Mist</span><span lang="ja">地を這う霧</span></td><td>&ndash;</td></tr><tr><td><code>HealingField</code></td><td><span lang="en">Healing Sigil</span><span lang="ja">癒やしの陣</span></td><td>&ndash;</td></tr><tr><td><code>PainterlyGrass</code></td><td><span lang="en">Windswept Meadow</span><span lang="ja">風渡る草原</span></td><td>&ndash;</td></tr><tr><td><code>PrismGuard</code></td><td><span lang="en">Prismatic Crystal Bulwark</span><span lang="ja">プリズム結晶の防壁</span></td><td><code>quantity</code></td></tr><tr><td><code>QuicksandSeal</code></td><td><span lang="en">Sand-Gathering Sigil</span><span lang="ja">砂集めの陣</span></td><td><code>quantity</code></td></tr><tr><td><code>SmokeColumn</code></td><td><span lang="en">Billowing Smoke Column</span><span lang="ja">立ち昇る煙柱</span></td><td>&ndash;</td></tr><tr><td><code>SteamJet</code></td><td><span lang="en">Rising Steam Jet</span><span lang="ja">噴き上がる蒸気</span></td><td>&ndash;</td></tr><tr><td><code>ThornCrown</code></td><td><span lang="en">Thornvine Blossom Crown</span><span lang="ja">茨と花の冠</span></td><td><code>quantity</code></td></tr><tr><td><code>VenomPool</code></td><td><span lang="en">Bubbling Venom Sigil</span><span lang="ja">泡立つ毒の陣</span></td><td><code>quantity</code></td></tr></tbody></table></div><h4><span lang="en">Burst / one-shot</span><span lang="ja">バースト・単発</span> (19)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>AstralConvergence</code></td><td><span lang="en">Astral Ring Detonation</span><span lang="ja">星環の爆裂</span></td><td><code>quantity</code></td></tr><tr><td><code>AzureSweep</code></td><td><span lang="en">Azure Blade Sweep</span><span lang="ja">蒼刃の斬撃</span></td><td>&ndash;</td></tr><tr><td><code>BillowingAirburst</code></td><td><span lang="en">Billowing Airburst</span><span lang="ja">膨らむ空中爆発</span></td><td><code>quantity</code></td></tr><tr><td><code>DarkchainDetonation</code></td><td><span lang="en">Darkchain Sigil Rupture</span><span lang="ja">暗鎖の印の破裂</span></td><td>&ndash;</td></tr><tr><td><code>DimensionalRend</code> *</td><td><span lang="en">Rift-Shattering Slashes</span><span lang="ja">空間を裂く斬撃</span></td><td><code>cutSize</code> <code>quantity</code> <code>spread</code> <code>panelCount</code></td></tr><tr><td><code>FireExplosion</code></td><td><span lang="en">White-Hot Fireburst</span><span lang="ja">白熱の炎爆</span></td><td>&ndash;</td></tr><tr><td><code>FlameSurge</code></td><td><span lang="en">Surging Flame Tide</span><span lang="ja">押し寄せる炎の潮</span></td><td><code>quantity</code></td></tr><tr><td><code>FrostLanceRain</code></td><td><span lang="en">Falling Frost Spear Array</span><span lang="ja">降り注ぐ氷槍の列</span></td><td><code>quantity</code> <code>spread</code></td></tr><tr><td><code>GoldenChainRain</code></td><td><span lang="en">Golden Chain Rain</span><span lang="ja">黄金の鎖の雨</span></td><td><code>quantity</code> <code>spread</code> <code>crackBloom</code> <code>crackBloomSpread</code> <code>textureDensity</code></td></tr><tr><td><code>IceShatter</code></td><td><span lang="en">Shattering Frostburst</span><span lang="ja">砕け散る霜の爆発</span></td><td><code>quantity</code></td></tr><tr><td><code>MagmaFissure</code></td><td><span lang="en">Molten Vein Fissure</span><span lang="ja">溶岩脈の亀裂</span></td><td><code>quantity</code></td></tr><tr><td><code>PrismParry</code></td><td><span lang="en">Prismatic Crystal Block</span><span lang="ja">プリズム結晶の受け</span></td><td><code>quantity</code></td></tr><tr><td><code>RevivalBloom</code></td><td><span lang="en">Vitality Blossom</span><span lang="ja">生命の花</span></td><td><code>quantity</code></td></tr><tr><td><code>SacredRelicDescent</code></td><td><span lang="en">Sacred Relic Descent</span><span lang="ja">聖遺物の降臨</span></td><td><code>spread</code></td></tr><tr><td><code>Shockwave</code></td><td><span lang="en">Dust-Raising Shockwave</span><span lang="ja">砂塵を巻く衝撃波</span></td><td>&ndash;</td></tr><tr><td><code>SmokePuff</code></td><td><span lang="en">Dispersing Smoke Puff</span><span lang="ja">散りゆく煙</span></td><td>&ndash;</td></tr><tr><td><code>SpatialSweep</code> *</td><td><span lang="en">Riftblade Sweep</span><span lang="ja">裂空の斬撃</span></td><td>&ndash;</td></tr><tr><td><code>ThunderStrike</code></td><td><span lang="en">Vortex Lightning Strike</span><span lang="ja">渦巻く落雷</span></td><td>&ndash;</td></tr><tr><td><code>TidalSurge</code></td><td><span lang="en">Breaking Tidal Surge</span><span lang="ja">砕ける大波</span></td><td>&ndash;</td></tr></tbody></table></div><h4><span lang="en">Standalone</span><span lang="ja">単独実装</span> (2)</h4><div class="tw"><table><thead><tr><th><span lang="en">Folder / prefab</span><span lang="ja">フォルダー / プレハブ</span></th><th><span lang="en">Name</span><span lang="ja">名称</span></th><th><span lang="en">Extra preset fields</span><span lang="ja">追加のプリセット項目</span></th></tr></thead><tbody><tr><td><code>EnergyBurst</code></td><td><span lang="en">Lightning Arc Burst</span><span lang="ja">稲妻のアークバースト</span></td><td><code>quantity</code></td></tr><tr><td><code>MagicBarrier</code></td><td><span lang="en">Runic Mesh Barrier</span><span lang="ja">ルーン網の結界</span></td><td>&ndash;</td></tr></tbody></table></div><h4><span lang="en">Post-process</span><span lang="ja">ポストプロセス</span> (1)</h4><div class="tw"><table><tbody><tr><td><code>ImpactFrame</code></td><td><span lang="en">Impact Frame</span><span lang="ja">インパクトフレーム</span></td><td><span lang="en">Renderer Feature, no prefab</span><span lang="ja">Renderer Feature（プレハブなし）</span></td></tr></tbody></table></div>
+
+<h2 id="status"><span lang="en">Status and gaps</span><span lang="ja">現状と未対応</span></h2>
+<ul lang="en"><li><b>Not built yet (from the PRD):</b> FR-15 sample scene, M4 Effect Lab with paste import and generator, M5 Quest tier.</li><li><b>Not verified:</b> a player build, Quest, single-pass stereo, and Play mode for weapon trails. Most non-default <code>size</code>, <code>quantity</code> and <code>spread</code> values were never rendered.</li><li><b>Not compared with the site:</b> effects 2, 3, 17 to 24 and five of the beams.</li><li><b>Left out:</b> Golden Chain Rain&#39;s 3D tube links, Sacred Relic&#39;s model swap, and Painterly Grass&#39;s preview ground patch.</li><li>Known visual differences are in each README.</li></ul>
+<ul lang="ja"><li><b>未実装（PRD より）：</b>FR-15 サンプルシーン、M4 の Effect Lab（貼り付けインポート、ジェネレーター）、M5 の Quest ティア。</li><li><b>未検証：</b>プレイヤービルド、Quest、シングルパスステレオ、武器の軌跡の Play モード動作。<code>size</code>、<code>quantity</code>、<code>spread</code> の既定値以外はほとんど描画確認していません。</li><li><b>サイトとの比較なし：</b>エフェクト 2、3、17〜24 とビーム 5 種。</li><li><b>対象外：</b>Golden Chain Rain の 3D チューブ鎖、Sacred Relic のモデル差し替え、Painterly Grass のプレビュー用地面。</li><li>既知の見た目の差異は各 README に記載しています。</li></ul>
+
+<h2 id="log"><span lang="en">Changelog</span><span lang="ja">変更履歴</span></h2>
+<p lang="en">0.1.0 (2026-11-02): all 60 effects, shared bases, 197 tests.</p><p lang="ja">0.1.0（2026-11-02）：全60エフェクト、共有基底クラス、テスト197件。</p>
+</main></div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+var d=document.documentElement;
+function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function draw(){if(window.mermaid){document.querySelectorAll('.mermaid:not([data-processed])').forEach(function(n){if(n.offsetParent!==null)mermaid.run({nodes:[n]})})}}
+function setLang(l){d.dataset.lang=l;d.lang=l;document.getElementById('lang').textContent=l==='en'?'日本語':'EN';put('vfx-lang',l);draw()}
+document.getElementById('lang').onclick=function(){setLang(d.dataset.lang==='en'?'ja':'en')};
+document.getElementById('theme').onclick=function(){var t=d.dataset.theme==='dark'?'light':'dark';d.dataset.theme=t;put('vfx-theme',t)};
+var t=get('vfx-theme');if(t)d.dataset.theme=t;
+document.querySelectorAll('pre:not(.mermaid)').forEach(function(p){var b=document.createElement('button');b.textContent='Copy';b.onclick=function(){navigator.clipboard.writeText(p.querySelector('code').innerText);b.textContent='OK';setTimeout(function(){b.textContent='Copy'},1200)};p.appendChild(b)});
+if(window.mermaid){mermaid.initialize({startOnLoad:false,securityLevel:'loose',theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'neutral'})}
+setLang(get('vfx-lang')||'en');
+</script>
+</body></html>
