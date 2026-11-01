@@ -6,6 +6,14 @@
 // Lifecycle shared by beams. The beam runs from x = -2.4 to 2.4 in source axes and the root's scale
 // stretches it to its length. Billboards and end details divide by _Stretch to keep their proportions.
 
+// GLSL's mat2(c, -s, s, c) * v.
+float2 Rotate(float2 v, float angle)
+{
+    float c = cos(angle);
+    float s = sin(angle);
+    return float2(c * v.x + s * v.y, -s * v.x + c * v.y);
+}
+
 // Only the cross-section changes, so the end points never move. The range is revealed in fragments.
 float3 StageShape(float3 p, float s, float e)
 {
