@@ -21,6 +21,7 @@ CBUFFER_START(UnityPerMaterial)
     float _ParticleCount;
     float4 _ImpactUp;
     float _Quantity;
+    float _EmitterTime;
     float4 _LayerCounts;
 CBUFFER_END
 
@@ -96,6 +97,35 @@ float3 StyleColor(float3 tint, float light)
 {
     float3 c = lerp(tint * 0.22, tint * 0.72, StyleStep(0.38, light));
     return lerp(c, lerp(tint, float3(1.0, 1.0, 1.0), 0.38) * 1.04, StyleStep(0.70, light));
+}
+
+// GLSL's mod, which differs from fmod for negative values.
+float Mod(float x, float y)
+{
+    return x - y * floor(x / y);
+}
+
+float Band(float x, float width)
+{
+    return 1.0 - smoothstep(width, width + 0.004, abs(x));
+}
+
+float Ink(float d, float width)
+{
+    return Band(d, width) + exp(-abs(d) * 120.0) * 0.12;
+}
+
+float Segment(float2 p, float2 a, float2 b)
+{
+    float2 d = b - a;
+    return length(p - a - d * saturate(dot(p - a, d) / dot(d, d)));
+}
+
+float Polygon(float2 p, float sides, float radius, float rotation)
+{
+    float a = atan2(p.y, p.x) + rotation;
+    float sector = 2.0 * VFX_PI / sides;
+    return cos(floor(0.5 + a / sector) * sector - a) * length(p) - radius;
 }
 
 // Uniform scale of the effect root, which billboards multiply into their size.

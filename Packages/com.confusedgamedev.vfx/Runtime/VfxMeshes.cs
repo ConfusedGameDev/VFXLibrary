@@ -25,6 +25,46 @@ namespace ConfusedGameDev.Vfx
             return seeds;
         }
 
+        /// <summary>A subdivided square in XY, for flat layers that deform during their lifecycle.</summary>
+        public static Mesh CreateGrid(string name, float width, int segments, Bounds bounds)
+        {
+            var positions = new List<Vector3>();
+            var uvs = new List<Vector2>();
+            var indices = new List<int>();
+
+            for (int y = 0; y <= segments; y++)
+            {
+                for (int x = 0; x <= segments; x++)
+                {
+                    var uv = new Vector2((float)x / segments, (float)y / segments);
+                    positions.Add(new Vector3((uv.x - 0.5f) * width, (uv.y - 0.5f) * width, 0f));
+                    uvs.Add(uv);
+                }
+            }
+
+            for (int y = 0; y < segments; y++)
+            {
+                for (int x = 0; x < segments; x++)
+                {
+                    int corner = y * (segments + 1) + x;
+                    int above = corner + segments + 1;
+                    indices.Add(corner);
+                    indices.Add(above);
+                    indices.Add(corner + 1);
+                    indices.Add(above);
+                    indices.Add(above + 1);
+                    indices.Add(corner + 1);
+                }
+            }
+
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(positions);
+            mesh.SetUVs(0, uvs);
+            mesh.SetTriangles(indices, 0);
+            mesh.bounds = bounds;
+            return mesh;
+        }
+
         /// <summary>
         /// Instanced quads baked into one mesh. Each has its index in UV2.x, for shaders to collapse
         /// the ones past their count, and its seed in UV1 when seeds are given.
