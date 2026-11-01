@@ -5,6 +5,14 @@
 
 // Lifecycle shared by projectiles. Define VFX_VARIANT, the site's variant number, before including this.
 
+// GLSL's mat2(c, -s, s, c) * v.
+float2 Rotate(float2 v, float angle)
+{
+    float c = cos(angle);
+    float s = sin(angle);
+    return float2(c * v.x + s * v.y, -s * v.x + c * v.y);
+}
+
 // Start-up and ending deformation, in source axes relative to the effect root.
 float3 StageShape(float3 p, float s, float e)
 {

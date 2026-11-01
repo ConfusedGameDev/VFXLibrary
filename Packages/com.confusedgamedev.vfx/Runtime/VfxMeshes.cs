@@ -28,6 +28,24 @@ namespace ConfusedGameDev.Vfx
             return seeds;
         }
 
+        /// <summary>The newer projectiles' fixed-length ribbon trail. Each ribbon's phase goes in UV1.x.</summary>
+        public static Mesh CreateSchoolTrail(string name, int ribbons)
+        {
+            var builder = new VfxMeshBuilder();
+            for (int k = 0; k < ribbons; k++)
+            {
+                int ribbon = k;
+                builder.AddSurface(24, 2, (u, v) =>
+                {
+                    float a = ribbon * Mathf.PI * 0.5f + u * 3f;
+                    float r = (1f - u) * 0.3f;
+                    float w = Mathf.Sin(u * Mathf.PI) * 0.065f * (v * 2f - 1f);
+                    return new Vector3(-u * 2.8f, Mathf.Cos(a) * r + w, Mathf.Sin(a) * r + w * 0.3f);
+                }, new Vector4(k, 0f, 0f, 0f));
+            }
+            return builder.Build(name, ProjectileBounds);
+        }
+
         /// <summary>A subdivided square in XY, for flat layers that deform during their lifecycle.</summary>
         public static Mesh CreateGrid(string name, float width, int segments, Bounds bounds)
         {
