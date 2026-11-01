@@ -9,6 +9,9 @@ namespace ConfusedGameDev.Vfx
         // Holds a projectile's longest reach at size 2, including the ending's stretch and impact.
         public static readonly Bounds ProjectileBounds = new Bounds(new Vector3(0f, 0f, -1f), new Vector3(9f, 9f, 13f));
 
+        // Holds a beam at its base length and size 2, including the end flares. The root's scale carries it to any length.
+        public static readonly Bounds BeamBounds = new Bounds(Vector3.zero, new Vector3(6f, 6f, 9f));
+
         /// <summary>
         /// Same generator as the source, so particles land where they do on the site. The source offsets
         /// the seed by 311 for each particle layer an effect allocates before this one.
@@ -44,6 +47,36 @@ namespace ConfusedGameDev.Vfx
                 }, new Vector4(k, 0f, 0f, 0f));
             }
             return builder.Build(name, ProjectileBounds);
+        }
+
+        /// <summary>An open tube along the beam, in source axes. UV.x runs around it, UV.y from source to target.</summary>
+        public static Mesh CreateBeamTube(string name, float radius, int sides, int segments)
+        {
+            var builder = new VfxMeshBuilder();
+            builder.AddPatch(segments, sides, (u, v) =>
+            {
+                float a = u * Mathf.PI * 2f;
+                return new Vector3((v - 0.5f) * 4.8f, -Mathf.Sin(a) * radius, Mathf.Cos(a) * radius);
+            });
+            return builder.Build(name, BeamBounds);
+        }
+
+        /// <summary>A billboard quad per end. UV1 holds the end's x and its role, 0 at the source and 1 at the target.</summary>
+        public static Mesh CreateBeamFlares(string name, float sourceWidth, float targetWidth)
+        {
+            var builder = new VfxMeshBuilder();
+            builder.AddPatch(1, 1, (u, v) => new Vector3((u - 0.5f) * sourceWidth, (v - 0.5f) * sourceWidth, 0f), new Vector4(-2.4f, 0f, 0f, 0f));
+            builder.AddPatch(1, 1, (u, v) => new Vector3((u - 0.5f) * targetWidth, (v - 0.5f) * targetWidth, 0f), new Vector4(2.4f, 1f, 0f, 0f));
+            return builder.Build(name, BeamBounds);
+        }
+
+        /// <summary>A quad across the beam at each end, in source axes. UV1.x holds the end, -1 or 1.</summary>
+        public static Mesh CreateBeamDiscs(string name)
+        {
+            var builder = new VfxMeshBuilder();
+            builder.AddPatch(1, 1, (u, v) => new Vector3(-2.4f, v - 0.5f, 0.5f - u), new Vector4(-1f, 0f, 0f, 0f));
+            builder.AddPatch(1, 1, (u, v) => new Vector3(2.4f, (v - 0.5f) * 1.3f, (0.5f - u) * 1.3f), new Vector4(1f, 0f, 0f, 0f));
+            return builder.Build(name, BeamBounds);
         }
 
         /// <summary>A subdivided square in XY, for flat layers that deform during their lifecycle.</summary>

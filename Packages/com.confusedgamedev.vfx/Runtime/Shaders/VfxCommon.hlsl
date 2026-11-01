@@ -24,6 +24,7 @@ CBUFFER_START(UnityPerMaterial)
     float _EmitterTime;
     float4 _LayerCounts;
     float _Spread;
+    float _Stretch;
 CBUFFER_END
 
 float Hash(float2 p)
