@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Rebuilds an effect and renders it at fixed moments for comparison with the site, with no tonemapping
 /// or bloom. Run with -executeMethod ParityCapture.Run. Environment: VFX_EFFECT is the effect folder,
-/// VFX_TIMES comma-separated seconds, VFX_CAPTURE_DIR the output folder.
+/// VFX_TIMES comma-separated seconds, VFX_CAPTURE_DIR the output folder, VFX_YAW an optional turn in degrees.
 /// </summary>
 public static class ParityCapture
 {
@@ -51,6 +51,9 @@ public static class ParityCapture
         var prefab = AssetDatabase.LoadAssetAtPath<VfxEffect>(VfxAssetBuilder.PrefabPath(effectName));
         VfxEffect effect = UnityEngine.Object.Instantiate(prefab);
         SceneManager.MoveGameObjectToScene(effect.gameObject, scene);
+
+        float.TryParse(Environment.GetEnvironmentVariable("VFX_YAW"), NumberStyles.Float, CultureInfo.InvariantCulture, out float yaw);
+        effect.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 
         effect.Play();
         float elapsed = 0f;

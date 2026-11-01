@@ -7,6 +7,7 @@ namespace ConfusedGameDev.Vfx
     /// <summary>
     /// Base of the weapon trails: a ribbon of the blade's recent world-space history. There is no sword,
     /// input or animation here. Give it a weapon with AttachWeapon, or in the inspector, and swing that.
+    /// Until then the Editor swings a stand-in blade, so the trail can be seen. Builds draw nothing.
     /// </summary>
     public abstract class VfxBladeTrailEffect : VfxEffect
     {
@@ -16,6 +17,10 @@ namespace ConfusedGameDev.Vfx
         /// <summary>Seconds of effect time each position lasts.</summary>
         public const float Lifetime = 0.18f;
 
+        private const float PreviewCycle = 1.2f;
+        private const float PreviewSweep = 0.4f;
+        private const float PreviewArc = 75f;
+
         private static readonly int DensityId = Shader.PropertyToID("_Quantity");
 
         [Header("Weapon")]
@@ -24,6 +29,8 @@ namespace ConfusedGameDev.Vfx
         [SerializeField] private Vector3 bladeBase = Vector3.zero;
         [Tooltip("Blade tip, in the weapon's local space.")]
         [SerializeField] private Vector3 bladeTip = Vector3.up;
+        [Tooltip("With no weapon, swing a stand-in blade around this object in the Editor. Never runs in a build.")]
+        [SerializeField] private bool previewSwing = true;
 
         private readonly Vector3[] bases = new Vector3[Capacity];
         private readonly Vector3[] tips = new Vector3[Capacity];
@@ -39,6 +46,11 @@ namespace ConfusedGameDev.Vfx
 
         /// <summary>Blade positions in the ribbon right now.</summary>
         public int SampleCount => count;
+
+        public bool HasWeapon => weapon != null;
+
+        /// <summary>True while there is no weapon, so the Editor swings the stand-in blade.</summary>
+        public bool UsesPreviewSwing => weapon == null && previewSwing && Application.isEditor;
 
         /// <summary>Starts a fresh trail from a weapon. Base and tip are in its local space.</summary>
         public void AttachWeapon(Transform target, Vector3 root, Vector3 tip)
@@ -85,9 +97,17 @@ namespace ConfusedGameDev.Vfx
                 RemoveFirst();
             }
 
-            if (weapon != null && State == VfxState.Playing)
+            if (State == VfxState.Playing)
             {
-                Sample(deltaTime);
+                if (weapon != null)
+                {
+                    Sample(deltaTime, weapon.TransformPoint(bladeBase), weapon.TransformPoint(bladeTip));
+                }
+                else if (UsesPreviewSwing)
+                {
+                    Quaternion blade = Quaternion.Euler(0f, 0f, PreviewAngle());
+                    Sample(deltaTime, transform.TransformPoint(blade * (Vector3.up * 0.4f)), transform.TransformPoint(blade * (Vector3.up * 1.6f)));
+                }
             }
 
             Rebuild();
@@ -114,8 +134,16 @@ namespace ConfusedGameDev.Vfx
 
         protected virtual void OnDisable()
         {
-            // An edit-mode preview must not leave its temporary mesh on the object.
-            if (Application.isPlaying || filters == null)
+            if (!Application.isPlaying)
+            {
+                EndEditPreview();
+            }
+        }
+
+        /// <summary>Puts the baked meshes back, so an edit-mode preview cannot be saved into the scene.</summary>
+        public override void EndEditPreview()
+        {
+            if (filters == null)
             {
                 return;
             }
@@ -127,6 +155,7 @@ namespace ConfusedGameDev.Vfx
                     filters[i].sharedMesh = bakedMeshes[i];
                 }
             }
+            filters = null;
         }
 
         protected override void OnDestroy()
@@ -159,10 +188,16 @@ namespace ConfusedGameDev.Vfx
             Rebuild();
         }
 
-        private void Sample(float deltaTime)
+        // A quick sweep, a pause so the ribbon can fade, then a sweep back.
+        private float PreviewAngle()
         {
-            Vector3 root = weapon.TransformPoint(bladeBase);
-            Vector3 tip = weapon.TransformPoint(bladeTip);
+            int cycle = Mathf.FloorToInt(clock / PreviewCycle);
+            float sweep = Mathf.SmoothStep(-PreviewArc, PreviewArc, (clock - cycle * PreviewCycle) / PreviewSweep);
+            return cycle % 2 == 0 ? sweep : -sweep;
+        }
+
+        private void Sample(float deltaTime, Vector3 root, Vector3 tip)
+        {
             float length = Vector3.Distance(root, tip);
             if (float.IsNaN(length) || float.IsInfinity(length) || length <= 1e-6f)
             {
@@ -200,14 +235,17 @@ namespace ConfusedGameDev.Vfx
 
         private void EnsureRibbon()
         {
-            if (ribbon != null)
+            if (ribbon == null)
+            {
+                ribbon = VfxBladeTrailMeshes.CreateRibbon(name + "Ribbon");
+                ribbon.hideFlags = HideFlags.DontSave;
+                ribbon.MarkDynamic();
+            }
+
+            if (filters != null)
             {
                 return;
             }
-
-            ribbon = VfxBladeTrailMeshes.CreateRibbon(name + "Ribbon");
-            ribbon.hideFlags = HideFlags.DontSave;
-            ribbon.MarkDynamic();
 
             filters = GetComponentsInChildren<MeshFilter>(true);
             bakedMeshes = new Mesh[filters.Length];

@@ -91,6 +91,59 @@ namespace ConfusedGameDev.Vfx.Tests
         }
 
         [Test]
+        public void PreviewSwing_DrawsWithNoWeapon()
+        {
+            var effect = new GameObject("SpatialSmear").AddComponent<SpatialSmearEffect>();
+            effect.SetPreset(ScriptableObject.CreateInstance<SpatialSmearPreset>());
+            effect.Play();
+
+            Assert.That(effect.UsesPreviewSwing, Is.True);
+
+            for (int i = 0; i < 12; i++)
+            {
+                effect.Tick(Step);
+            }
+            Assert.That(effect.SampleCount, Is.GreaterThan(1));
+
+            Object.DestroyImmediate(effect.Preset);
+            Object.DestroyImmediate(effect.gameObject);
+        }
+
+        [Test]
+        public void PreviewSwing_GivesWayToAWeapon()
+        {
+            var weapon = new GameObject("Weapon").transform;
+            SpatialSmearEffect effect = CreateEffect(weapon);
+
+            Assert.That(effect.UsesPreviewSwing, Is.False);
+
+            Release(effect, weapon);
+        }
+
+        [Test]
+        public void EndEditPreview_RestoresTheBakedMeshes()
+        {
+            var weapon = new GameObject("Weapon").transform;
+            var baked = new Mesh();
+            var effect = new GameObject("SpatialSmear").AddComponent<SpatialSmearEffect>();
+            var filter = effect.gameObject.AddComponent<MeshFilter>();
+            filter.sharedMesh = baked;
+            effect.SetPreset(ScriptableObject.CreateInstance<SpatialSmearPreset>());
+
+            effect.Play();
+            Assert.That(filter.sharedMesh, Is.Not.SameAs(baked));
+
+            effect.EndEditPreview();
+            Assert.That(filter.sharedMesh, Is.SameAs(baked));
+
+            effect.Play();
+            Assert.That(filter.sharedMesh, Is.Not.SameAs(baked));
+
+            Object.DestroyImmediate(baked);
+            Release(effect, weapon);
+        }
+
+        [Test]
         public void AttachWeapon_RejectsAZeroLengthBlade()
         {
             var weapon = new GameObject("Weapon").transform;

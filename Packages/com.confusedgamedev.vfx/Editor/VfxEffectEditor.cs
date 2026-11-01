@@ -11,19 +11,11 @@ namespace ConfusedGameDev.Vfx.Editor
     public class VfxEffectEditor : UnityEditor.Editor
     {
         private UnityEditor.Editor presetEditor;
-        private double lastTickTime;
 
         private VfxEffect Effect => (VfxEffect)target;
 
-        protected virtual void OnEnable()
-        {
-            lastTickTime = EditorApplication.timeSinceStartup;
-            EditorApplication.update += TickPreview;
-        }
-
         protected virtual void OnDisable()
         {
-            EditorApplication.update -= TickPreview;
             DestroyImmediate(presetEditor);
         }
 
@@ -52,18 +44,26 @@ namespace ConfusedGameDev.Vfx.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 Effect.ApplyParameters();
-                RepaintViews();
+                VfxEditorPreview.RepaintViews();
             }
         }
 
         private void DrawTransport()
         {
-            using (new EditorGUI.DisabledScope(Effect.Preset == null))
+            // A prefab asset is not in a scene, so a preview has nothing to run on.
+            using (new EditorGUI.DisabledScope(Effect.Preset == null || EditorUtility.IsPersistent(Effect)))
             using (new EditorGUILayout.HorizontalScope())
             {
                 if (GUILayout.Button(Effect.IsPlaying ? "Replay" : "Play"))
                 {
-                    Effect.Play();
+                    if (Application.isPlaying)
+                    {
+                        Effect.Play();
+                    }
+                    else
+                    {
+                        VfxEditorPreview.Play(Effect);
+                    }
                 }
 
                 using (new EditorGUI.DisabledScope(!Effect.IsPlaying))
@@ -78,26 +78,9 @@ namespace ConfusedGameDev.Vfx.Editor
             EditorGUILayout.LabelField("State", $"{Effect.State}  ({Effect.EffectTime:0.00}s)");
         }
 
-        private void TickPreview()
+        public override bool RequiresConstantRepaint()
         {
-            double now = EditorApplication.timeSinceStartup;
-            float deltaTime = (float)(now - lastTickTime);
-            lastTickTime = now;
-
-            if (target == null || Application.isPlaying || !Effect.IsPlaying)
-            {
-                return;
-            }
-
-            Effect.Tick(deltaTime);
-            RepaintViews();
-            Repaint();
-        }
-
-        private static void RepaintViews()
-        {
-            EditorApplication.QueuePlayerLoopUpdate();
-            SceneView.RepaintAll();
+            return Effect.IsPlaying;
         }
     }
 }

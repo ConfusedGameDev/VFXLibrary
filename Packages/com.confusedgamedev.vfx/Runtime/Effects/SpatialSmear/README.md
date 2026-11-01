@@ -7,7 +7,7 @@ A swung blade leaves a clear ribbon that bends the scene behind it into fine ban
 
 ## Usage
 
-This effect draws nothing until it has a weapon. It records the blade, with no sword, input or animation of its own.
+This effect traces a moving weapon. It records the blade, with no sword, input or animation of its own. With no weapon assigned, the Editor swings a stand-in blade around the object so you can see the trail, in Edit mode and Play mode. Preview Swing turns that off. A build draws nothing until it has a weapon.
 
 ```csharp
 effect.AttachWeapon(sword, Vector3.zero, Vector3.up * 1.2f); // base and tip, in the sword's local space

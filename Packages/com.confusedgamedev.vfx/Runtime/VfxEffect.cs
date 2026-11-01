@@ -117,7 +117,7 @@ namespace ConfusedGameDev.Vfx
             ApplyParameters();
         }
 
-        /// <summary>Advances the effect. Update calls this in Play mode, the inspector calls it otherwise.</summary>
+        /// <summary>Advances the effect. Update calls this in Play mode, the editor preview calls it otherwise.</summary>
         public void Tick(float deltaTime)
         {
             VfxPreset active = ActiveParameters;
@@ -187,6 +187,11 @@ namespace ConfusedGameDev.Vfx
                 OnApplyParameters(propertyBlock, active);
                 target.SetPropertyBlock(propertyBlock);
             }
+        }
+
+        /// <summary>Called when an edit-mode preview ends or the scene saves. Undo temporary scene changes here.</summary>
+        public virtual void EndEditPreview()
+        {
         }
 
         /// <summary>Called on Play(), after the clock resets. Restart particles and spawn state here.</summary>
