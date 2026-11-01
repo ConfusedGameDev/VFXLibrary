@@ -113,6 +113,26 @@ namespace ConfusedGameDev.Vfx
             }
         }
 
+        /// <summary>
+        /// The source's impact shard: a spike and a short back cone around a centre, turned toward a
+        /// direction derived from the id. The centre goes in UV1, the id in UV2.x.
+        /// </summary>
+        public void AddCrystal(Vector3 center, int id, float length, float width)
+        {
+            Vector3 ray = new Vector3(0.25f + Mathf.Sin(id * 2.4f) * 0.45f, Mathf.Cos(id * 2.39996f), Mathf.Sin(id * 2.39996f)).normalized;
+            Quaternion turn = Quaternion.FromToRotation(Vector3.right, ray);
+
+            Vector3 Cone(float reach, float u, float v)
+            {
+                float a = u * Mathf.PI * 2f;
+                Vector3 p = v > 0.5f ? new Vector3(reach, 0f, 0f) : new Vector3(0f, Mathf.Cos(a) * width, Mathf.Sin(a) * width);
+                return turn * p + center;
+            }
+
+            AddPatch(1, 4, (u, v) => Cone(length, u, v), center, id);
+            AddPatch(1, 4, (u, v) => Cone(-width, u, v), center, id);
+        }
+
         /// <summary>The source's surface(): columns along u, with the opposite vertex order to AddTube.</summary>
         public void AddSurface(int us, int vs, Func<float, float, Vector3> point, Vector4 extra = default, float part = 0f)
         {
