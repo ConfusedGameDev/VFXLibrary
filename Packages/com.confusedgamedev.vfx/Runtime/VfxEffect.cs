@@ -24,6 +24,9 @@ namespace ConfusedGameDev.Vfx
         protected static readonly int EffectColorId = Shader.PropertyToID("_EffectColor");
         protected static readonly int EffectSizeId = Shader.PropertyToID("_EffectSize");
         protected static readonly int EffectDetailId = Shader.PropertyToID("_EffectDetail");
+        protected static readonly int LifeStageId = Shader.PropertyToID("_LifeStage");
+        protected static readonly int LifeStartId = Shader.PropertyToID("_LifeStart");
+        protected static readonly int LifeEndId = Shader.PropertyToID("_LifeEnd");
 
         [SerializeField] private VfxPreset preset;
         [SerializeField] private bool playOnEnable = true;
@@ -44,6 +47,12 @@ namespace ConfusedGameDev.Vfx
 
         /// <summary>1 while playing, falling to 0 across the stop fade.</summary>
         public float Fade { get; private set; } = 1f;
+
+        /// <summary>0 to 1 across the start-up animation. Holds its value once Stop() is called.</summary>
+        public float StartProgress { get; private set; }
+
+        /// <summary>0 to 1 across the ending.</summary>
+        public float EndProgress => 1f - Fade;
 
         public bool IsPlaying => State == VfxState.Playing || State == VfxState.Stopping;
 
@@ -76,6 +85,7 @@ namespace ConfusedGameDev.Vfx
             stopElapsed = 0f;
             Fade = 1f;
             State = VfxState.Playing;
+            UpdateStartProgress();
             OnPlay();
             ApplyParameters();
         }
@@ -116,11 +126,15 @@ namespace ConfusedGameDev.Vfx
                 return;
             }
 
-            EffectTime += deltaTime * active.speed;
+            OnTick(deltaTime);
+
+            // Lifecycle runs on effect time, so speed scales the ending as it does on the site.
+            float effectDelta = deltaTime * active.speed;
+            EffectTime += effectDelta;
 
             if (State == VfxState.Stopping)
             {
-                stopElapsed += deltaTime;
+                stopElapsed += effectDelta;
                 Fade = Mathf.Clamp01(1f - stopElapsed / active.stopDuration);
                 if (stopElapsed >= active.stopDuration)
                 {
@@ -128,10 +142,15 @@ namespace ConfusedGameDev.Vfx
                     return;
                 }
             }
-            else if (active.playback == VfxPlayback.OneShot && EffectTime >= active.duration)
+            else
             {
-                Finish();
-                return;
+                if (active.playback == VfxPlayback.OneShot && EffectTime >= active.duration)
+                {
+                    Finish();
+                    return;
+                }
+
+                UpdateStartProgress();
             }
 
             ApplyParameters();
@@ -159,9 +178,12 @@ namespace ConfusedGameDev.Vfx
                 target.GetPropertyBlock(propertyBlock);
                 propertyBlock.SetFloat(EffectTimeId, EffectTime);
                 propertyBlock.SetFloat(EffectFadeId, Fade);
-                propertyBlock.SetColor(EffectColorId, active.color.linear);
+                propertyBlock.SetColor(EffectColorId, active.color); // SetColor converts to linear itself.
                 propertyBlock.SetFloat(EffectSizeId, active.size);
                 propertyBlock.SetFloat(EffectDetailId, active.detail);
+                propertyBlock.SetFloat(LifeStartId, StartProgress);
+                propertyBlock.SetFloat(LifeEndId, EndProgress);
+                propertyBlock.SetFloat(LifeStageId, CurrentLifeStage());
                 OnApplyParameters(propertyBlock, active);
                 target.SetPropertyBlock(propertyBlock);
             }
@@ -169,6 +191,11 @@ namespace ConfusedGameDev.Vfx
 
         /// <summary>Called on Play(), after the clock resets. Restart particles and spawn state here.</summary>
         protected virtual void OnPlay()
+        {
+        }
+
+        /// <summary>Called every Tick with unscaled seconds, before the clock advances.</summary>
+        protected virtual void OnTick(float deltaTime)
         {
         }
 
@@ -200,6 +227,24 @@ namespace ConfusedGameDev.Vfx
         protected virtual void OnDestroy()
         {
             ReleaseRuntimeParameters();
+        }
+
+        private void UpdateStartProgress()
+        {
+            VfxPreset active = ActiveParameters;
+            StartProgress = active == null || active.startDuration <= 0f
+                ? 1f
+                : Mathf.Min(1f, EffectTime / active.startDuration);
+        }
+
+        // 0 starting, 1 steady, 2 ending. Shaders skip their lifecycle work on 1.
+        private float CurrentLifeStage()
+        {
+            if (State == VfxState.Stopping || State == VfxState.Finished)
+            {
+                return 2f;
+            }
+            return StartProgress < 1f ? 0f : 1f;
         }
 
         private void Finish()

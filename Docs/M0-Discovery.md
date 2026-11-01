@@ -23,8 +23,7 @@ Findings from https://00gamedevs.com, checked 2026-11-01. Catalog `contentVersio
 | `energy-burst` | Lightning Arc Burst | burst | one-shot | medium | 0.28 / 1.26 | 527,318 |
 | `magic-barrier` | Runic Mesh Barrier | area | continuous | medium | 0.7 / 1 | 526,997 |
 
-The meaning of `lifecycle.start` and `lifecycle.end` is not documented in what was read so far. Confirm it
-in the module source before setting preset durations.
+`lifecycle.start` and `lifecycle.end` are seconds of visual time, so `speed` scales them.
 
 ### Parameters
 
@@ -37,7 +36,8 @@ in the module source before setting preset durations.
 | `detail` | 0.25 to 2 | 1 | 1 | 1 |
 | `quantity` | 1 to 24 | none | 12 | none |
 
-Panel order on the site still needs checking for FR-07; the catalog is alphabetical.
+The site's panel order, which FR-07 follows, is color, size, speed, detail, density; the catalog is
+alphabetical. Checked on fireball only.
 
 ## The whole library
 
@@ -60,16 +60,16 @@ until `finished`, which matches `VfxEffect.Tick` and `State`.
 - The guide says downloads use original defaults, without the site's final tuning or automatic density
   reduction. The live page can differ from catalog defaults, so capture parity shots using explicit values.
 - Modules depend on `three@0.187.0`, and the site validates on WebGL2.
-- The three pilot modules are nearly the same size, and fireball contains 228 `void main` matches. A shared
-  runtime covering many effects is likely, but this has not been confirmed. If so, the first port's main
-  job is isolating one effect's code from the bundle.
+- Fireball's module holds one shared runtime with `createEffect` branching on `kind` and `variant`, plus
+  the spec. The other pilots are nearly the same size, so they likely do too. A port means reading
+  only its own `kind`/`variant` branches, and `lifeVertex` and `lifeFragment` give its lifecycle.
 
 ## License
 
 MIT, Copyright (c) 2026 00GameDevs (@00vchannel), statement recorded 2026-11-01. Three.js is separately MIT,
-Copyright 2010-2026 three.js authors. Both notices must ship with any ported code, so M2 needs to add a
-`THIRD-PARTY-NOTICES.md` to the package. The license excludes the site's UI, branding, avatars and
-promotional images. Each module's header also carries its notices.
+Copyright 2010-2026 three.js authors. Both notices ship in the package's `THIRD-PARTY-NOTICES.md`. The
+license excludes the site's UI, branding, avatars and promotional images. Each module's header also
+carries its notices.
 
 ## Out of scope for this pass
 
