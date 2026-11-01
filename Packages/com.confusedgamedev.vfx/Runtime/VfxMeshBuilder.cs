@@ -39,6 +39,108 @@ namespace ConfusedGameDev.Vfx
             parts.Add(new Vector2(part, 0f));
         }
 
+        /// <summary>A vertex with its own normal. Build every piece of a mesh this way, or use ComputeNormals.</summary>
+        public void AddLitVertex(Vector3 position, Vector3 normal, Vector2 uv, Vector4 extra = default, float part = 0f)
+        {
+            normals.Add(normal);
+            AddVertex(position, uv, extra, part);
+        }
+
+        /// <summary>A flat triangle, with the source's face normal.</summary>
+        public void AddFlatTriangle(Vector3 a, Vector3 b, Vector3 c, Vector2 uvA, Vector2 uvB, Vector2 uvC, Vector4 extra = default, float part = 0f)
+        {
+            Vector3 normal = Vector3.Cross(c - b, a - b).normalized;
+            int first = VertexCount;
+            AddLitVertex(a, normal, uvA, extra, part);
+            AddLitVertex(b, normal, uvB, extra, part);
+            AddLitVertex(c, normal, uvC, extra, part);
+            AddIndices(first, first + 1, first + 2);
+        }
+
+        /// <summary>The source's SphereGeometry of radius 1, then scaled, with its normals.</summary>
+        public void AddSphere(int widthSegments, int heightSegments, Vector3 scale, Vector4 extra = default, float part = 0f)
+        {
+            int first = VertexCount;
+            for (int y = 0; y <= heightSegments; y++)
+            {
+                float v = (float)y / heightSegments;
+                for (int x = 0; x <= widthSegments; x++)
+                {
+                    float u = (float)x / widthSegments;
+                    float azimuth = u * Mathf.PI * 2f;
+                    float polar = v * Mathf.PI;
+                    var unit = new Vector3(-Mathf.Cos(azimuth) * Mathf.Sin(polar), Mathf.Cos(polar), Mathf.Sin(azimuth) * Mathf.Sin(polar));
+                    var normal = new Vector3(unit.x / scale.x, unit.y / scale.y, unit.z / scale.z);
+                    AddLitVertex(Vector3.Scale(unit, scale), normal.normalized, new Vector2(u, 1f - v), extra, part);
+                }
+            }
+
+            for (int y = 0; y < heightSegments; y++)
+            {
+                for (int x = 0; x < widthSegments; x++)
+                {
+                    int a = first + y * (widthSegments + 1) + x + 1;
+                    int b = a - 1;
+                    int c = b + widthSegments + 1;
+                    int d = c + 1;
+                    if (y > 0)
+                    {
+                        AddIndices(a, b, d);
+                    }
+
+                    if (y < heightSegments - 1)
+                    {
+                        AddIndices(b, c, d);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The source's open CylinderGeometry, also its cones, along Y. Turn is a rotation applied to
+        /// positions and normals, then offset moves it.
+        /// </summary>
+        public void AddCylinder(float radiusTop, float radiusBottom, float height, int radialSegments, int heightSegments, Func<Vector3, Vector3> turn, Vector3 offset, Vector4 extra = default, float part = 0f)
+        {
+            int first = VertexCount;
+            float slope = (radiusBottom - radiusTop) / height;
+            for (int y = 0; y <= heightSegments; y++)
+            {
+                float v = (float)y / heightSegments;
+                float radius = v * (radiusBottom - radiusTop) + radiusTop;
+                for (int x = 0; x <= radialSegments; x++)
+                {
+                    float u = (float)x / radialSegments;
+                    float theta = u * Mathf.PI * 2f;
+                    float sin = Mathf.Sin(theta);
+                    float cos = Mathf.Cos(theta);
+                    Vector3 position = turn(new Vector3(radius * sin, (0.5f - v) * height, radius * cos)) + offset;
+                    Vector3 normal = turn(new Vector3(sin, slope, cos).normalized);
+                    AddLitVertex(position, normal, new Vector2(u, 1f - v), extra, part);
+                }
+            }
+
+            for (int y = 0; y < heightSegments; y++)
+            {
+                for (int x = 0; x < radialSegments; x++)
+                {
+                    int a = first + y * (radialSegments + 1) + x;
+                    int b = a + radialSegments + 1;
+                    int c = b + 1;
+                    int d = a + 1;
+                    if (radiusTop > 0f || y > 0)
+                    {
+                        AddIndices(a, b, d);
+                    }
+
+                    if (radiusBottom > 0f || y < heightSegments - 1)
+                    {
+                        AddIndices(b, c, d);
+                    }
+                }
+            }
+        }
+
         public void AddIndices(params int[] triangle)
         {
             indices.AddRange(triangle);
