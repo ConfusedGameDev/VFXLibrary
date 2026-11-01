@@ -18,14 +18,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Glow", FireballMeshes.CreateGlow())
             }, out Renderer[] renderers);
 
-            var serialized = new SerializedObject(root.GetComponent<FireballEffect>());
-            serialized.FindProperty("impactRenderer").objectReferenceValue = renderers[2];
-            serialized.FindProperty("glowRenderer").objectReferenceValue = renderers[3];
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-
-            renderers[2].enabled = false;
-            renderers[3].enabled = false;
-            VfxAssetBuilder.Save(root, "Fireball");
+            VfxAssetBuilder.SaveProjectile<FireballEffect>(root, "Fireball", renderers[2], renderers[3]);
         }
     }
 }

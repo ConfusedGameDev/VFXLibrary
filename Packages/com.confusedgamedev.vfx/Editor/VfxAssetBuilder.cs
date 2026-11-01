@@ -103,6 +103,20 @@ namespace ConfusedGameDev.Vfx.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Wires a projectile's impact layers, which stay hidden until Hit, then saves it.</summary>
+        public static void SaveProjectile<TEffect>(GameObject root, string effect, Renderer impact, Renderer glow)
+            where TEffect : VfxProjectileEffect
+        {
+            var serialized = new SerializedObject(root.GetComponent<TEffect>());
+            serialized.FindProperty("impactRenderer").objectReferenceValue = impact;
+            serialized.FindProperty("glowRenderer").objectReferenceValue = glow;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            impact.enabled = false;
+            glow.enabled = false;
+            Save(root, effect);
+        }
+
         private static string AssetFolder(string effect)
         {
             return $"Packages/com.confusedgamedev.vfx/Runtime/Effects/{effect}/Assets";

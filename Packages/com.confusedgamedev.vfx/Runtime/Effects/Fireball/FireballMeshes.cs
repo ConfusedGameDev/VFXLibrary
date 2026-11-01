@@ -16,8 +16,7 @@ namespace ConfusedGameDev.Vfx
         private const int CoreSides = 20;
         private const uint ParticleSeed = 9187;
 
-        // Holds the longest reach at size 2, including the ending's stretch and impact puffs.
-        private static readonly Bounds EffectBounds = new Bounds(new Vector3(0f, 0f, -1f), new Vector3(9f, 9f, 13f));
+        private static readonly Bounds EffectBounds = VfxMeshes.ProjectileBounds;
 
         public static Mesh CreateCore()
         {

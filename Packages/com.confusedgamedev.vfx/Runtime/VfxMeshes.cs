@@ -6,6 +6,9 @@ namespace ConfusedGameDev.Vfx
     /// <summary>Mesh helpers shared by effects. Shaders do the shaping, so meshes mostly carry IDs and seeds.</summary>
     public static class VfxMeshes
     {
+        // Holds a projectile's longest reach at size 2, including the ending's stretch and impact.
+        public static readonly Bounds ProjectileBounds = new Bounds(new Vector3(0f, 0f, -1f), new Vector3(9f, 9f, 13f));
+
         /// <summary>
         /// Same generator as the source, so particles land where they do on the site. The source offsets
         /// the seed by 311 for each particle layer an effect allocates before this one.
