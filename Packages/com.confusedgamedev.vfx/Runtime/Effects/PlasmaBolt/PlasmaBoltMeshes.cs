@@ -34,7 +34,7 @@ namespace ConfusedGameDev.Vfx
                 {
                     float h = (float)ring / CoreRings;
                     float a = (float)side / CoreSides * Mathf.PI * 2f;
-                    float r = 0.16f * Mathf.Pow(Mathf.Sin(h * Mathf.PI), 0.8f) * (1f + 0.32f * Mathf.Sin(ring * 2.7f + side * 1.9f));
+                    float r = 0.16f * Mathf.Pow(Mathf.Max(0f, Mathf.Sin(h * Mathf.PI)), 0.8f) * (1f + 0.32f * Mathf.Sin(ring * 2.7f + side * 1.9f));
                     builder.AddVertex(new Vector3((h * 2f - 1f) * 0.85f, Mathf.Cos(a) * r, Mathf.Sin(a) * r), new Vector2(h, (float)side / CoreSides));
                 }
             }
