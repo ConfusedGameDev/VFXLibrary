@@ -20,6 +20,8 @@ namespace ConfusedGameDev.Vfx
 
         protected bool Impacted { get; private set; }
 
+        protected bool IsTraveling => travelSpeed > 0f;
+
         protected abstract int MaxParticles { get; }
 
         /// <summary>The leading surface in local space right now, including the start-up deformation.</summary>
