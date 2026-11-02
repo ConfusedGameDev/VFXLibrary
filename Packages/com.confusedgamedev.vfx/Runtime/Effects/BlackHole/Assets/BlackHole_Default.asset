@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77af8c3a91311064dbd6315a1a43e4c3, type: 3}
   m_Name: BlackHole_Default
   m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.BlackHolePreset
-  color: {r: 1, g: 0.67058825, b: 0.25882354, a: 1}
-  size: 1
-  speed: 1
+  color: {r: 1, g: 1, b: 1, a: 1}
+  size: 1.693
+  speed: 2
   detail: 1
   density: 1
   playback: 1
@@ -22,5 +22,5 @@ MonoBehaviour:
   startDuration: 1.1
   stopDuration: 1.4
   endAction: 0
-  holeSize: 6
-  holeDetail: 2
+  holeSize: 0.8
+  holeDetail: 0.7

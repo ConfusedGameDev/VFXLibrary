@@ -18,7 +18,7 @@ MonoBehaviour:
   detail: 1
   density: 0.5
   playback: 1
-  duration: 5
+  duration: 3
   startDuration: 0.7
   stopDuration: 1
   endAction: 0

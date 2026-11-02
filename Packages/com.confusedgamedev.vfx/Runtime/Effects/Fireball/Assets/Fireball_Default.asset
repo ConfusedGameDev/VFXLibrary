@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406d1e7344c2c2340b37321481300270, type: 3}
   m_Name: Fireball_Default
   m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.FireballPreset
-  color: {r: 1, g: 0.50980395, b: 0.24313726, a: 1}
-  size: 1
-  speed: 1
-  density: 0.5
-  detail: 1
+  color: {r: 1, g: 0.2744224, b: 0, a: 1}
+  size: 0.25
+  speed: 0.801
+  detail: 1.334
+  density: 0.71
   playback: 1
   duration: 1
   startDuration: 0.35

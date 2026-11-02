@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3cafba00455d64ebfb2dfcd5c31c6e, type: 3}
   m_Name: ArcaneMatrix_Default
   m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.ArcaneMatrixPreset
-  color: {r: 0.7411765, g: 0.6039216, b: 1, a: 1}
-  size: 1
-  speed: 1
-  detail: 1
-  density: 0.5
+  color: {r: 1, g: 0, b: 0.096683264, a: 1}
+  size: 0.678
+  speed: 2
+  detail: 2
+  density: 1
   playback: 1
   duration: 5
   startDuration: 0.7
