@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 9206783864394127527}
   - component: {fileID: 2446927672160188539}
   - component: {fileID: 3870018292526051475}
+  - component: {fileID: 7830752591448898777}
   m_Layer: 0
   m_Name: MissileTurret
   m_TagString: Untagged
@@ -230,6 +231,36 @@ MonoBehaviour:
   - {fileID: 1182367043581225502}
   - {fileID: 4491201505152280439}
   - {fileID: 4326520960102178186}
+--- !u!114 &7830752591448898777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609978631040673781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e72128d27f01cb4f9180353af559583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.VfxObjectFiring
+  preset: {fileID: 11400000, guid: ff516e0e18284a0498bc8d86f214b085, type: 2}
+  playOnEnable: 0
+  renderers: []
+  onFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  kind: 5
+  flatMaterial: {fileID: 2100000, guid: 5f02250918795024fac2b96c5511e3bf, type: 2}
+  glowMaterial: {fileID: 2100000, guid: 702c39e1d4da6c049ae7fcb333d899f4, type: 2}
+  arcCoreMaterial: {fileID: 2100000, guid: 15fab560b3a01c2498ebe2ca875a9705, type: 2}
+  arcHaloMaterial: {fileID: 2100000, guid: 07093c86eba4c774c902f99133917b0f, type: 2}
+  smokeMaterial: {fileID: 2100000, guid: cb898c9b42b2afd4aa7dde062513b5d4, type: 2}
+  ribbonMaterial: {fileID: 2100000, guid: bdceb272c79780e479ba699a9487dab5, type: 2}
+  missileMesh: {fileID: 4300000, guid: ccf43dab13e8ee741b434e423291832a, type: 2}
+  missileMaterials:
+  - {fileID: 2100000, guid: 5ed21b5faf8ae034e93da0da3f189824, type: 2}
+  - {fileID: 2100000, guid: ea038fb23052b7543b17aad5e98f4061, type: 2}
+  - {fileID: 2100000, guid: 6e9996878114cb04caac46b7f5ee2b2d, type: 2}
 --- !u!1 &1972922235266762435
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,4 +26,15 @@ GetComponent<VfxObject>().SetColors(primary, secondary, accent);
 ## Fire points
 
 `VfxObject.FirePoints` lists `left-r1-c1`, `left-r1-c2`, `left-r1-c3`, `left-r2-c1`, `left-r2-c2`, `left-r2-c3`, `right-r1-c1`, `right-r1-c2`, `right-r1-c3`, `right-r2-c1`, `right-r2-c2`, `right-r2-c3` as child transforms. Each one aims along its own +Z.
-The source's firing effects are not part of this object yet.
+## Firing
+
+`VfxObjectFiring` plays the shot: one missile with flame and smoke from the next pod in turn, 2.5 s, reaching 3.6 m. Press Play in its Inspector to see it without entering Play mode, or from code:
+
+```csharp
+var firing = GetComponent<VfxObjectFiring>();
+firing.Fire();                         // straight ahead
+firing.Fire(worldTarget: enemy.position);
+firing.StopFire();
+```
+
+This is the visual only. It does no damage and has no collision.
