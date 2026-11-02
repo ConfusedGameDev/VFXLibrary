@@ -114,7 +114,27 @@ namespace ConfusedGameDev.Vfx.Editor
 
             impact.enabled = false;
             glow.enabled = false;
+            root.AddComponent<VfxProjectileHitDetector>();
             Save(root, effect);
+        }
+
+        /// <summary>Adds a beam's emitters at the ends of its meshes, then saves it.</summary>
+        public static void SaveBeam<TEffect>(GameObject root, string effect)
+            where TEffect : VfxBeamEffect
+        {
+            var serialized = new SerializedObject(root.GetComponent<TEffect>());
+            serialized.FindProperty("emitterA").objectReferenceValue = AddEmitter(root, "EmitterA", -0.5f);
+            serialized.FindProperty("emitterB").objectReferenceValue = AddEmitter(root, "EmitterB", 0.5f);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            Save(root, effect);
+        }
+
+        private static Transform AddEmitter(GameObject root, string name, float end)
+        {
+            Transform emitter = new GameObject(name).transform;
+            emitter.SetParent(root.transform, false);
+            emitter.localPosition = new Vector3(0f, 0f, VfxBeamEffect.BaseLength * end);
+            return emitter;
         }
 
         private static string AssetFolder(string effect)

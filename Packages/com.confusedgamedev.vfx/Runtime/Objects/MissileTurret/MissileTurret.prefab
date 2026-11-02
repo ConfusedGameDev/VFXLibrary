@@ -261,6 +261,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5ed21b5faf8ae034e93da0da3f189824, type: 2}
   - {fileID: 2100000, guid: ea038fb23052b7543b17aad5e98f4061, type: 2}
   - {fileID: 2100000, guid: 6e9996878114cb04caac46b7f5ee2b2d, type: 2}
+  detectHits: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1972922235266762435
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,14 @@
+{
+    "name": "ConfusedGameDev.Vfx.Showcase.Editor",
+    "rootNamespace": "ConfusedGameDev.Vfx.Showcase.Editor",
+    "references": [
+        "ConfusedGameDev.Vfx",
+        "ConfusedGameDev.Vfx.Showcase",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": false
+}

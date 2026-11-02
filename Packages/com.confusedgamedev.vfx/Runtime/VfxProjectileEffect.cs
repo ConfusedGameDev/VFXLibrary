@@ -27,6 +27,9 @@ namespace ConfusedGameDev.Vfx
         /// <summary>The leading surface in local space right now, including the start-up deformation.</summary>
         protected abstract Vector3 CurrentContact(VfxPreset parameters);
 
+        /// <summary>The leading surface in world space right now.</summary>
+        public Vector3 ContactPosition => transform.TransformPoint(CurrentContact(ActiveParameters));
+
         /// <summary>Aims the projectile and sets its travel speed in units per second. 0 leaves movement to the game.</summary>
         public void SetDirection(Vector3 direction, float speed = 4f)
         {
@@ -74,6 +77,22 @@ namespace ConfusedGameDev.Vfx
 
             Impacted = true;
             Stop();
+        }
+
+        /// <summary>Puts the impact layers back, so a previewed hit cannot be saved into the scene.</summary>
+        public override void EndEditPreview()
+        {
+            SetImpactVisible(false, false);
+
+            if (impactRenderer != null)
+            {
+                impactRenderer.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            }
+
+            if (glowRenderer != null)
+            {
+                glowRenderer.transform.localPosition = Vector3.zero;
+            }
         }
 
         protected override void OnPlay()

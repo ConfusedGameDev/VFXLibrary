@@ -15,7 +15,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Droplets", VenomStreamMeshes.CreateDroplets())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "VenomStream");
+            VfxAssetBuilder.SaveBeam<VenomStreamEffect>(root, "VenomStream");
         }
     }
 }

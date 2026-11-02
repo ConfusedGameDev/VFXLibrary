@@ -15,7 +15,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Droplets", SoulSiphonMeshes.CreateDroplets())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "SoulSiphon");
+            VfxAssetBuilder.SaveBeam<SoulSiphonEffect>(root, "SoulSiphon");
         }
     }
 }

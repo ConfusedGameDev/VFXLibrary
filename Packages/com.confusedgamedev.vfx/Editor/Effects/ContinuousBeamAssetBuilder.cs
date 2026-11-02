@@ -18,7 +18,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Flares", ContinuousBeamMeshes.CreateFlares())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "ContinuousBeam");
+            VfxAssetBuilder.SaveBeam<ContinuousBeamEffect>(root, "ContinuousBeam");
         }
     }
 }

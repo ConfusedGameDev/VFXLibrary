@@ -85,5 +85,29 @@ namespace ConfusedGameDev.Vfx.Tests
 
             Object.DestroyImmediate(firing.gameObject);
         }
+
+        [TestCase("LaserTurret", true, 1.5f)]
+        [TestCase("RailgunTurret", true, 1.5f)]
+        [TestCase("LaserTurret", false, 3.4f)]
+        [TestCase("TwinCannonTurret", true, 3.4f)]
+        public void ShotEnd_StopsAtTheFirstColliderWhenDetecting(string folder, bool detectHits, float distance)
+        {
+            VfxObjectFiring firing = Spawn(folder);
+            var serialized = new SerializedObject(firing);
+            serialized.FindProperty("detectHits").boolValue = detectHits;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            Transform point = firing.GetComponent<VfxObject>().FirePoints[0];
+            GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.transform.SetPositionAndRotation(point.position + point.forward * 2f, point.rotation);
+            Physics.SyncTransforms();
+
+            float reached = Vector3.Distance(point.position, firing.ShotEnd(point));
+
+            Assert.That(reached, Is.EqualTo(distance).Within(0.001f));
+
+            Object.DestroyImmediate(wall);
+            Object.DestroyImmediate(firing.gameObject);
+        }
     }
 }

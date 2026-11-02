@@ -9,6 +9,14 @@
     "url": "https://github.com/ConfusedGameDev/VFXLibrary"
   },
   "dependencies": {
+    "com.unity.modules.physics": "1.0.0",
     "com.unity.render-pipelines.universal": "17.5.0"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Showcase Hall",
+      "description": "A hall with a menu that shows every effect and object in the package. Needs the Input System package.",
+      "path": "Samples~/Showcase"
+    }
+  ]
 }

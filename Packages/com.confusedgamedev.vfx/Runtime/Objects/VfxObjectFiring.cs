@@ -18,7 +18,8 @@ namespace ConfusedGameDev.Vfx
 
     /// <summary>
     /// The single-shot firing effects of the weapons and turrets. Everything is drawn each frame with
-    /// Graphics.RenderMesh, so a shot adds nothing to the scene. There is no damage or collision here.
+    /// Graphics.RenderMesh, so a shot adds nothing to the scene. There is no damage here, and only laser
+    /// and railgun shots can collide, ending on the first collider when Detect Hits is on.
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(VfxObject))]
@@ -45,6 +46,9 @@ namespace ConfusedGameDev.Vfx
         [SerializeField] private Material ribbonMaterial;
         [SerializeField] private Mesh missileMesh;
         [SerializeField] private Material[] missileMaterials = Array.Empty<Material>();
+        [Tooltip("Ends laser and railgun shots on the first non-trigger collider in their path.")]
+        [SerializeField] private bool detectHits;
+        [SerializeField] private LayerMask hitLayers = ~0;
 
         private readonly List<Transform> selected = new List<Transform>();
         private readonly Vector3[] arcPath = new Vector3[97];
@@ -99,6 +103,13 @@ namespace ConfusedGameDev.Vfx
 
         public VfxFiringKind Kind => kind;
 
+        /// <summary>Ends laser and railgun shots on the first non-trigger collider in their path.</summary>
+        public bool DetectHits
+        {
+            get => detectHits;
+            set => detectHits = value;
+        }
+
         /// <summary>Limits the shot to one camera. Null draws it for every camera.</summary>
         public Camera RenderCamera { get; set; }
 
@@ -107,6 +118,12 @@ namespace ConfusedGameDev.Vfx
 
         /// <summary>The fire points in use by the current shot.</summary>
         public int ActivePointCount => selected.Count;
+
+        /// <summary>Where a shot from this fire point ends right now, after any hit.</summary>
+        public Vector3 ShotEnd(Transform point)
+        {
+            return PoseOf(point).end;
+        }
 
         public static float DurationOf(VfxFiringKind kind)
         {
@@ -381,7 +398,7 @@ namespace ConfusedGameDev.Vfx
 
                 for (int i = 0; i < 3; i++)
                 {
-                    DrawRing(color, pose, At(pose, 0.10f + age * (1.1f + i * 0.35f)), 0.065f + age * 0.16f, fade * 0.75f, age * 3f + i);
+                    DrawRing(color, pose, At(pose, Mathf.Min(pose.distance, 0.10f + age * (1.1f + i * 0.35f))), 0.065f + age * 0.16f, fade * 0.75f, age * 3f + i);
                 }
             }
         }
@@ -589,7 +606,8 @@ namespace ConfusedGameDev.Vfx
                 return;
             }
 
-            int vertices = ribbonCount * 4;
+            // Whole arrays, because a shorter upload shrinks the mesh below what its indices reference.
+            int vertices = ribbonPositions.Length;
             ribbon.SetVertices(ribbonPositions, 0, vertices, MeshUpdateFlags.DontRecalculateBounds);
             ribbon.SetUVs(1, ribbonPrevious, 0, vertices, MeshUpdateFlags.DontRecalculateBounds);
             ribbon.SetUVs(2, ribbonNext, 0, vertices, MeshUpdateFlags.DontRecalculateBounds);
@@ -627,8 +645,27 @@ namespace ConfusedGameDev.Vfx
                 pose.up = Vector3.up;
             }
             pose.right = Vector3.Cross(pose.up, pose.direction).normalized;
+            pose.distance = HitDistance(pose);
             pose.end = pose.origin + pose.direction * pose.distance;
             return pose;
+        }
+
+        private float HitDistance(Pose pose)
+        {
+            if (!detectHits || (kind != VfxFiringKind.Laser && kind != VfxFiringKind.Railgun))
+            {
+                return pose.distance;
+            }
+
+            // Outside Play mode nothing else syncs colliders with their transforms.
+            if (!Application.isPlaying)
+            {
+                Physics.SyncTransforms();
+            }
+
+            return Physics.Raycast(pose.origin, pose.direction, out RaycastHit hit, pose.distance, hitLayers, QueryTriggerInteraction.Ignore)
+                ? hit.distance
+                : pose.distance;
         }
 
         private static Vector3 At(Pose pose, float distance)

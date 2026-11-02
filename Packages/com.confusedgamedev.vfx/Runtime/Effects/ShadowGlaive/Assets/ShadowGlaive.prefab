@@ -190,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2591487518718723521}
   - component: {fileID: 4784186864712079597}
+  - component: {fileID: 2150107119322318113}
   m_Layer: 0
   m_Name: ShadowGlaive
   m_TagString: Untagged
@@ -242,6 +243,22 @@ MonoBehaviour:
       m_Calls: []
   impactRenderer: {fileID: 6333680747989837256}
   glowRenderer: {fileID: 6024452786434353823}
+--- !u!114 &2150107119322318113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5571458604098538566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6809b6f6665f4649ac21e5b2a4ec05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.VfxProjectileHitDetector
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  radius: 0.1
 --- !u!1 &7423023552061286325
 GameObject:
   m_ObjectHideFlags: 0

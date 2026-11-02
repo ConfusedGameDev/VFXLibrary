@@ -100,6 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5020984179274802397}
   - component: {fileID: 3739460884071349254}
+  - component: {fileID: 1252110541340488824}
   m_Layer: 0
   m_Name: FrostWheel
   m_TagString: Untagged
@@ -152,6 +153,22 @@ MonoBehaviour:
       m_Calls: []
   impactRenderer: {fileID: 3065143446191119036}
   glowRenderer: {fileID: 6021703077392376473}
+--- !u!114 &1252110541340488824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153809624743492405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6809b6f6665f4649ac21e5b2a4ec05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.VfxProjectileHitDetector
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  radius: 0.1
 --- !u!1 &3674111991084478848
 GameObject:
   m_ObjectHideFlags: 0

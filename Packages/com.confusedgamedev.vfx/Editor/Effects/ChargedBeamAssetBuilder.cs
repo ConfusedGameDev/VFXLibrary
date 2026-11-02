@@ -18,7 +18,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Flares", ChargedBeamMeshes.CreateFlares())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "ChargedBeam");
+            VfxAssetBuilder.SaveBeam<ChargedBeamEffect>(root, "ChargedBeam");
         }
     }
 }

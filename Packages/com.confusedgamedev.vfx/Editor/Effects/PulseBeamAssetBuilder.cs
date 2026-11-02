@@ -18,7 +18,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Flares", PulseBeamMeshes.CreateFlares())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "PulseBeam");
+            VfxAssetBuilder.SaveBeam<PulseBeamEffect>(root, "PulseBeam");
         }
     }
 }

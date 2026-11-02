@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ConfusedGameDev.Vfx
 {
     /// <summary>Azure Blade Sweep. A blue-white arc of nearly a full turn sweeps out, holds, then its tail catches the head. It ends on its own.</summary>
-    public sealed class AzureSweepEffect : VfxBurstEffect
+    public sealed class AzureSweepEffect : VfxSweepEffect
     {
         protected override Vector4 LayerCounts(float density)
         {

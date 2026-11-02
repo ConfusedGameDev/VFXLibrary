@@ -15,6 +15,8 @@ effect.SetDirection(aim, speed: 4f);
 effect.Hit(contactPoint, contactNormal); // from your collision code
 ```
 
+Or add `VfxProjectileHitDetector` to the prefab and it calls `Hit` on the first collider in its path. To try it, put `VfxProjectileShooter` on an object facing a collider, assign the prefab, set Shoot Point to the end of the barrel if there is one, and press Shoot in Play mode. To preview the impact alone, press Play then Hit in the inspector.
+
 `Stop()` ends it without an impact. Tools > ConfusedGameDev > VFX > Rebuild Runic Crystal Missiles Assets regenerates the
 prefab and meshes.
 

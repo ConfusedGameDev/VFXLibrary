@@ -130,7 +130,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2821650848307276062}
-  m_Mesh: {fileID: 1050954156752324881, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
+  m_Mesh: {fileID: 1716036959183396435, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
 --- !u!23 &6572304857172815788
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4407607467813325938}
-  m_Mesh: {fileID: 2614749255053144128, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
+  m_Mesh: {fileID: -2454274494183683549, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
 --- !u!23 &4908880884281602114
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -270,6 +270,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4543136408190470043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 440404282698815791}
+  m_Layer: 0
+  m_Name: EmitterB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &440404282698815791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543136408190470043}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6621830693917118058}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5008318582529718689
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,7 +341,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5008318582529718689}
-  m_Mesh: {fileID: -4390568716180737292, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
+  m_Mesh: {fileID: 1163687514550125616, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
 --- !u!23 &1014698671788188654
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -395,6 +426,8 @@ Transform:
   - {fileID: 7230760542283472911}
   - {fileID: 6251797148712666555}
   - {fileID: 848867309708211208}
+  - {fileID: 5971375374252110747}
+  - {fileID: 440404282698815791}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4283004381148038194
@@ -421,6 +454,43 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   length: 4.8
+  emitterA: {fileID: 5971375374252110747}
+  emitterB: {fileID: 440404282698815791}
+  detectHits: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!1 &7487057616445557623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5971375374252110747}
+  m_Layer: 0
+  m_Name: EmitterA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5971375374252110747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7487057616445557623}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -2.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6621830693917118058}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8871324004703130230
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +531,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8871324004703130230}
-  m_Mesh: {fileID: -8405143838452945578, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
+  m_Mesh: {fileID: 2713025678661447249, guid: f65ed5dd0e7e41d49a3e04fa94121110, type: 2}
 --- !u!23 &4905771735627115059
 MeshRenderer:
   m_ObjectHideFlags: 0

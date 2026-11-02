@@ -15,6 +15,8 @@ effect.SetEndpoints(muzzle.position, target.position); // or effect.Length = 8f;
 effect.Stop();
 ```
 
+Or move the prefab's `EmitterA` and `EmitterB` children, or assign any scene transforms to the effect's Emitter A and Emitter B, and the beam follows them every frame. While you drag an emitter with the move tool, the beam waits and catches up when you let go. Turn on Detect Hits to end it on the first non-trigger collider in Hit Layers, so it stops at anything between the two. Clear either emitter to go back to `SetEndpoints`.
+
 Call `SetEndpoints` again whenever an end moves. The length is the root's Z scale, so the end points stay
 where they are through the start-up and the ending. Tools > ConfusedGameDev > VFX > Rebuild Corrosive Venom Jet Assets
 regenerates the prefab and meshes.

@@ -15,7 +15,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Particles", RadiantBeamMeshes.CreateParticles())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "RadiantBeam");
+            VfxAssetBuilder.SaveBeam<RadiantBeamEffect>(root, "RadiantBeam");
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ConfusedGameDev.Vfx.Editor
                 new VfxAssetBuilder.Layer("Flares", ArcRayMeshes.CreateFlares())
             }, out _);
 
-            VfxAssetBuilder.Save(root, "ArcRay");
+            VfxAssetBuilder.SaveBeam<ArcRayEffect>(root, "ArcRay");
         }
     }
 }

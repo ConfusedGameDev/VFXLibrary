@@ -5,6 +5,7 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
+        "com.unity.modules.physics": "1.0.0",
         "com.unity.render-pipelines.universal": "17.5.0"
       }
     },

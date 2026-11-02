@@ -176,6 +176,10 @@ MonoBehaviour:
   ribbonMaterial: {fileID: 2100000, guid: bdceb272c79780e479ba699a9487dab5, type: 2}
   missileMesh: {fileID: 0}
   missileMaterials: []
+  detectHits: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &7688774748323872776
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,4 +37,4 @@ firing.Fire(worldTarget: enemy.position);
 firing.StopFire();
 ```
 
-This is the visual only. It does no damage and has no collision.
+Turn on Detect Hits on `VfxObjectFiring` to end the beam and its rings on the first non-trigger collider in Hit Layers. It's off by default, and the shot still does no damage.

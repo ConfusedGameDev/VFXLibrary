@@ -460,6 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6241759166522850395}
   - component: {fileID: 3826690741730000951}
+  - component: {fileID: 7241510736660852157}
   m_Layer: 0
   m_Name: ElectricMagicArrowStrike
   m_TagString: Untagged
@@ -518,6 +519,22 @@ MonoBehaviour:
       m_Calls: []
   impactRenderer: {fileID: 6975312512009039762}
   glowRenderer: {fileID: 3725388878011210697}
+--- !u!114 &7241510736660852157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4807099972905464779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6809b6f6665f4649ac21e5b2a4ec05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.VfxProjectileHitDetector
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  radius: 0.1
 --- !u!1 &5604978315005529070
 GameObject:
   m_ObjectHideFlags: 0
