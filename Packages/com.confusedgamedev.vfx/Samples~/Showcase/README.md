@@ -10,7 +10,7 @@ A hall with every effect and object in the package, modelled on Unreal's content
 
 ## Use
 
-Open `Scenes/Showcase.unity` and press Play.
+In Package Manager, select ConfusedGameDev VFX, open the Samples tab and press Import next to Showcase Hall. It copies to `Assets/Samples/`. Open `Scenes/Showcase.unity` there and press Play.
 
 | Input | Action |
 |---|---|
@@ -38,3 +38,9 @@ Open `Scenes/Showcase.unity` and press Play.
 Only the open category exists at runtime, so the hall never runs more than one category's effects together.
 
 To add an item, add an entry to `Data/ShowcaseCatalog.asset`.
+
+## Rebuild
+
+`Tools > ConfusedGameDev > VFX > Build Showcase` regenerates the catalogue, materials and scene in the imported copy. The sample's tests check that the catalogue covers every effect and object.
+
+To change the sample in this repository, import it, edit the copy under `Assets/Samples/`, then copy your changes back to `Samples~/Showcase/`. `Assets/Samples/` is ignored by git.

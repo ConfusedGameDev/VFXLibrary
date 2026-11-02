@@ -7,7 +7,7 @@ namespace ConfusedGameDev.Vfx.Showcase.Tests
 {
     public class VfxShowcaseCatalogTests
     {
-        private static VfxShowcaseCatalog Catalog => AssetDatabase.LoadAssetAtPath<VfxShowcaseCatalog>("Assets/Showcase/Data/ShowcaseCatalog.asset");
+        private static VfxShowcaseCatalog Catalog => AssetDatabase.LoadAssetAtPath<VfxShowcaseCatalog>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("t:VfxShowcaseCatalog").First()));
 
         [Test]
         public void Tables_CoverEveryFolder()

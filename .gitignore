@@ -107,3 +107,7 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Imported package samples; the source is Packages/com.confusedgamedev.vfx/Samples~
+/[Aa]ssets/[Ss]amples/
+/[Aa]ssets/[Ss]amples.meta

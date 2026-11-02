@@ -1,6 +1,0 @@
-{
-    "name": "ConfusedGameDev.Vfx.Showcase",
-    "rootNamespace": "ConfusedGameDev.Vfx.Showcase",
-    "references": ["ConfusedGameDev.Vfx", "Unity.InputSystem"],
-    "autoReferenced": false
-}

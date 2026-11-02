@@ -14,12 +14,12 @@ using UnityEngine.UIElements;
 
 namespace ConfusedGameDev.Vfx.Showcase.Editor
 {
-    /// <summary>Regenerates the catalogue, materials and hall scene under Assets/Showcase.</summary>
+    /// <summary>Regenerates the catalogue, materials and hall scene in the imported sample.</summary>
     public static class VfxShowcaseBuilder
     {
-        private const string Root = "Assets/Showcase";
-        private const string DataFolder = Root + "/Data";
-        private const string ScenePath = Root + "/Scenes/Showcase.unity";
+        private const string BuilderSearch = nameof(VfxShowcaseBuilder) + " t:MonoScript";
+        private const string DataFolderName = "Data";
+        private const string SceneName = "Showcase.unity";
         private const string EffectsRoot = "Packages/com.confusedgamedev.vfx/Runtime/Effects";
         private const string ObjectsRoot = "Packages/com.confusedgamedev.vfx/Runtime/Objects";
         private const float HallHalfWidth = 10f;
@@ -63,13 +63,21 @@ namespace ConfusedGameDev.Vfx.Showcase.Editor
         private static readonly Dictionary<string, float> Scales = new Dictionary<string, float> { { "BlackHole", 0.2f } };
 
         /// <summary>Folders on disk that no category lists. Empty when the tables are complete.</summary>
+        // The sample can be imported anywhere, so the folders are found from this script. It sits in Editor/.
+        private static string Root => Path.GetDirectoryName(Path.GetDirectoryName(
+            AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(BuilderSearch).First()))).Replace(Path.DirectorySeparatorChar, '/');
+
+        private static string DataFolder => $"{Root}/{DataFolderName}";
+
+        private static string ScenePath => $"{Root}/Scenes/{SceneName}";
+
         public static IEnumerable<string> Unclassified()
         {
             var listed = new HashSet<string>(Projectiles.Concat(Beams).Concat(Ground).Concat(Area).Concat(Other)
                 .Concat(new[] { "WeaponSmear", "SpatialSmear", "AzureSweep", "SpatialSweep" })
                 .Concat(Weapons).Concat(Turrets).Concat(Props));
 
-            IEnumerable<string> folders = Directory.GetDirectories(EffectsRoot).Concat(Directory.GetDirectories(ObjectsRoot))
+            IEnumerable<string> folders = Directory.GetDirectories(Path.GetFullPath(EffectsRoot)).Concat(Directory.GetDirectories(Path.GetFullPath(ObjectsRoot)))
                 .Select(Path.GetFileName)
                 .Where(folder => folder != "Firing" && folder != "Shaders");
             return folders.Where(folder => !listed.Contains(folder));
@@ -187,12 +195,12 @@ namespace ConfusedGameDev.Vfx.Showcase.Editor
         // The first prose paragraph after the port credit.
         private static string Describe(string readme)
         {
-            if (!File.Exists(readme))
+            if (!File.Exists(Path.GetFullPath(readme)))
             {
                 return string.Empty;
             }
 
-            string[] paragraphs = File.ReadAllText(readme).Replace("\r", string.Empty).Split(new[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] paragraphs = File.ReadAllText(Path.GetFullPath(readme)).Replace("\r", string.Empty).Split(new[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string paragraph in paragraphs.Skip(1))
             {
                 string text = paragraph.Trim();
@@ -213,9 +221,11 @@ namespace ConfusedGameDev.Vfx.Showcase.Editor
         {
             EnsureFolder(Root, "Scenes");
 
-            // Built alongside the open scene, so unsaved work there is left alone.
+            // Built alongside the open scene, so unsaved work there is left alone. Unity can't add a scene
+            // to an untitled one, but a blank one holds nothing to lose.
             UnityEngine.SceneManagement.Scene previous = SceneManager.GetActiveScene();
-            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+            bool replacesBlank = string.IsNullOrEmpty(previous.path) && !previous.isDirty;
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, replacesBlank ? NewSceneMode.Single : NewSceneMode.Additive);
             SceneManager.SetActiveScene(scene);
 
             var hallObject = new GameObject("Hall");
@@ -265,6 +275,11 @@ namespace ConfusedGameDev.Vfx.Showcase.Editor
             events.AddComponent<InputSystemUIInputModule>();
 
             EditorSceneManager.SaveScene(scene, ScenePath);
+            if (replacesBlank)
+            {
+                return;
+            }
+
             SceneManager.SetActiveScene(previous);
             EditorSceneManager.CloseScene(scene, true);
         }
