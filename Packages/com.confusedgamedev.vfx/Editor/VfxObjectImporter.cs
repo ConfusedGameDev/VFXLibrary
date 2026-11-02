@@ -71,7 +71,10 @@ namespace ConfusedGameDev.Vfx.Editor
             var only = string.IsNullOrEmpty(filter) ? null : new HashSet<string>(filter.Split(','));
 
             int count = 0;
-            foreach (string file in Directory.GetFiles(folder, "*.json"))
+            // Sorted, so the missile exists before the turret that launches it.
+            string[] files = Directory.GetFiles(folder, "*.json");
+            Array.Sort(files, StringComparer.Ordinal);
+            foreach (string file in files)
             {
                 string name = Path.GetFileNameWithoutExtension(file);
                 if (only == null || only.Contains(name))
@@ -125,8 +128,84 @@ namespace ConfusedGameDev.Vfx.Editor
             }
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
+            if (points.arraySize > 0)
+            {
+                AddFiring(root, data.folder, folder);
+            }
+
             PrefabUtility.SaveAsPrefabAsset(root, $"{folder}/{data.folder}.prefab");
             UnityEngine.Object.DestroyImmediate(root);
+        }
+
+        private static void AddFiring(GameObject root, string name, string folder)
+        {
+            VfxFiringKind kind = KindOf(name);
+            string presetPath = $"{folder}/{name}_Firing.asset";
+            var preset = AssetDatabase.LoadAssetAtPath<VfxObjectFiringPreset>(presetPath);
+            if (preset == null)
+            {
+                preset = ScriptableObject.CreateInstance<VfxObjectFiringPreset>();
+                preset.duration = VfxObjectFiring.DurationOf(kind);
+                AssetDatabase.CreateAsset(preset, presetPath);
+            }
+
+            var firing = new SerializedObject(root.AddComponent<VfxObjectFiring>());
+            firing.FindProperty("preset").objectReferenceValue = preset;
+            firing.FindProperty("playOnEnable").boolValue = false;
+            firing.FindProperty("kind").enumValueIndex = (int)kind;
+            firing.FindProperty("flatMaterial").objectReferenceValue = FiringMaterial("Flat", "ConfusedGameDev/Vfx/Object Firing", 0f, false);
+            firing.FindProperty("glowMaterial").objectReferenceValue = FiringMaterial("Glow", "ConfusedGameDev/Vfx/Object Firing", 0f, true);
+            firing.FindProperty("arcCoreMaterial").objectReferenceValue = FiringMaterial("ArcCore", "ConfusedGameDev/Vfx/Object Firing", 1f, false);
+            firing.FindProperty("arcHaloMaterial").objectReferenceValue = FiringMaterial("ArcHalo", "ConfusedGameDev/Vfx/Object Firing", 2f, false);
+            firing.FindProperty("smokeMaterial").objectReferenceValue = FiringMaterial("Smoke", "ConfusedGameDev/Vfx/Object Firing", 3f, false);
+            firing.FindProperty("ribbonMaterial").objectReferenceValue = FiringMaterial("Ribbon", "ConfusedGameDev/Vfx/Object Firing Ribbon", 0f, false);
+
+            if (kind == VfxFiringKind.Missile)
+            {
+                var missile = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Missile/Missile.prefab");
+                firing.FindProperty("missileMesh").objectReferenceValue = missile.GetComponent<MeshFilter>().sharedMesh;
+                Material[] materials = missile.GetComponent<MeshRenderer>().sharedMaterials;
+                SerializedProperty list = firing.FindProperty("missileMaterials");
+                list.arraySize = materials.Length;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    list.GetArrayElementAtIndex(i).objectReferenceValue = materials[i];
+                }
+            }
+
+            firing.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static VfxFiringKind KindOf(string name)
+        {
+            switch (name)
+            {
+                case "EnergyPistol": return VfxFiringKind.EnergyPistol;
+                case "PulseRifle": return VfxFiringKind.PulseRifle;
+                case "TwinCannonTurret": return VfxFiringKind.TwinCannon;
+                case "LaserTurret": return VfxFiringKind.Laser;
+                case "RailgunTurret": return VfxFiringKind.Railgun;
+                case "MissileTurret": return VfxFiringKind.Missile;
+                default: return VfxFiringKind.Arc;
+            }
+        }
+
+        // Shared by every weapon. Colours and opacity arrive per draw.
+        private static Material FiringMaterial(string name, string shader, float mode, bool additive)
+        {
+            string folder = $"{Root}/Firing";
+            Directory.CreateDirectory(folder);
+            AssetDatabase.Refresh();
+
+            Material material = LoadMaterial($"{folder}/Firing{name}.mat", shader);
+            if (material.HasProperty("_Mode"))
+            {
+                material.SetFloat("_Mode", mode);
+                material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                material.SetFloat("_DstBlend", (float)(additive ? UnityEngine.Rendering.BlendMode.One : UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
+                material.SetFloat("_Cull", (float)(mode > 0f ? UnityEngine.Rendering.CullMode.Off : UnityEngine.Rendering.CullMode.Back));
+            }
+            return material;
         }
 
         private static Mesh BuildMesh(ObjectData data)

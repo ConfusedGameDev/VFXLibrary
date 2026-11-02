@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 7595493953258646428}
   - component: {fileID: 8573161760286013392}
   - component: {fileID: 7378699003103262717}
+  - component: {fileID: 7083130389950138857}
   m_Layer: 0
   m_Name: EnergyPistol
   m_TagString: Untagged
@@ -146,3 +147,30 @@ MonoBehaviour:
   slotRoles: 000000000100000002000000
   firePoints:
   - {fileID: 7212885766557188674}
+--- !u!114 &7083130389950138857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769102928746215635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e72128d27f01cb4f9180353af559583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ConfusedGameDev.Vfx::ConfusedGameDev.Vfx.VfxObjectFiring
+  preset: {fileID: 11400000, guid: ea7a1e27a0e41cf4b8cfda16562bd50a, type: 2}
+  playOnEnable: 0
+  renderers: []
+  onFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  kind: 0
+  flatMaterial: {fileID: 2100000, guid: 5f02250918795024fac2b96c5511e3bf, type: 2}
+  glowMaterial: {fileID: 2100000, guid: 702c39e1d4da6c049ae7fcb333d899f4, type: 2}
+  arcCoreMaterial: {fileID: 2100000, guid: 15fab560b3a01c2498ebe2ca875a9705, type: 2}
+  arcHaloMaterial: {fileID: 2100000, guid: 07093c86eba4c774c902f99133917b0f, type: 2}
+  smokeMaterial: {fileID: 2100000, guid: cb898c9b42b2afd4aa7dde062513b5d4, type: 2}
+  ribbonMaterial: {fileID: 2100000, guid: bdceb272c79780e479ba699a9487dab5, type: 2}
+  missileMesh: {fileID: 0}
+  missileMaterials: []

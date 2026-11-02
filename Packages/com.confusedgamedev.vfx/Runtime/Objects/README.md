@@ -55,3 +55,18 @@ Geometry converts by swapping X and Z, as the effects do, so a model facing +X o
 | [Wooden crate](WoodenCrate/README.md) | furniture | 5920 |
 | [Wooden fence](WoodenFence/README.md) | building | 7812 |
 | [Wooden table](WoodenTable/README.md) | furniture | 8780 |
+
+## Firing
+
+The pistol, the rifle and the five turrets carry `VfxObjectFiring`, a `VfxEffect` with one shot per `Fire`.
+
+| Member | Use |
+|---|---|
+| `Fire(string pointId = null, Vector3? worldTarget = null)` | Restarts the shot. Every point fires, except the missile turret, which uses its next pod. An unknown point throws. |
+| `StopFire()` | Ends the shot at once. |
+| `IsPlaying`, `Elapsed`, `Preset.duration` | Shot state, from `VfxEffect`. |
+| `RenderCamera` | Limits the draws to one camera. |
+
+Calling `Play()` repeats the last shot's points and target.
+Shots are drawn each frame with `Graphics.RenderMesh`, so they add no scene objects. The missile shrinks away at the end of its flight, where the source fades it, because its material is opaque.
+Rerunning the object importer rebuilds the firing component with the prefab.
