@@ -26,4 +26,15 @@ GetComponent<VfxObject>().SetColors(primary, secondary, accent);
 ## Fire points
 
 `VfxObject.FirePoints` lists `rifle-muzzle` as child transforms. Each one aims along its own +Z.
-The source's firing effects are not part of this object yet.
+## Firing
+
+`VfxObjectFiring` plays the shot: a three-round burst, 1.1 s, reaching 1.8 m. Press Play in its Inspector to see it without entering Play mode, or from code:
+
+```csharp
+var firing = GetComponent<VfxObjectFiring>();
+firing.Fire();                         // straight ahead
+firing.Fire(worldTarget: enemy.position);
+firing.StopFire();
+```
+
+This is the visual only. It does no damage and has no collision.
